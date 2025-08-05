@@ -1,4 +1,6 @@
+
+
+# Environment variables
+.env
+
 node_modules
-public
-# Local Netlify folder
-.netlify

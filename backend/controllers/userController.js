@@ -40,11 +40,11 @@ module.exports.getUserCount = async (req, res) => {
 
 module.exports.registerUser = async (req, res) => {
   // const { fullname, email, password, sex, age } = req.body;
-  // validate the input
+  // // validate the input
   // if (!fullname || !email || !password || !sex || !age) {
   //   return res.status(400).send({
   //     message: "All fields are required!",
-  //     fields: "fullname,email,password,sex,age",
+  //     fields: "name,email,password,sex,age",
   //   });
   // }
   // if (password.length < 6) {
@@ -87,33 +87,113 @@ module.exports.registerUser = async (req, res) => {
   let imagePath = "";
 
   const form = new formidable.IncomingForm();
-  form.parse(req, function (err, fields, files) {
+  form.parse(req, async function (err, fields, files) {
     // Ensure uploads directory exists
     const uploadDir = path.join(__dirname, "..", "uploads/userPprofile");
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir);
     }
     let file = null;
+    let oldPath = "";
+    let newPath = "";
     if (files.profilePicture || files.profilePicture[0]) {
       file = files.profilePicture[0];
+      oldPath = file.filepath;
+      let timestamp = Date.now();
+      newPath = path.join(uploadDir, `${timestamp}_${file.originalFilename}`);
+      imagePath = `/uploads/userPprofile/${timestamp}_${file.originalFilename}`;
     }
-    let oldPath = file.filepath;
-    let timestamp = Date.now();
-    let newPath = path.join(uploadDir, `${timestamp}_${file.originalFilename}`);
-    imagePath = `/uploads/userPprofile/${timestamp}_${file.originalFilename}`;
-    fs.readFile(oldPath, (err, rawData) => {
+
+    fs.readFile(oldPath, async (err, rawData) => {
       if (err) {
         console.log(err);
         return res.status(500).send("File read error");
       }
-      fs.writeFile(newPath, rawData, function (err) {
+      fs.writeFile(newPath, rawData, async function (err) {
         if (err) {
           console.log(err);
           return res.status(500).send("File save error");
         } else {
-          res.send({ fields, files });
+          const { fullname, email, password, sex, age } = fields;
+          if (!fullname || !email || !password || !sex || !age) {
+            return res.status(400).send({
+              message: "All fields are required!",
+              fields: "name,email,password,sex,age",
+            });
+          }
+          if (password[0].length < 6) {
+            return res.status(400).send({
+              message: "Password must be at least 6 characters long!",
+            });
+          }
+          // validate sex enum
+          if (!["male", "female"].includes(sex[0])) {
+            return res.status(400).json({ message: "Invalid sex value" });
+          }
+          // regex to validate email format
+          if (
+            !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email[0])
+            // regex to validate
+          ) {
+            return res.status(400).send({ message: "Invalid email format!" });
+          }
+          // regex to validate password strength
+          if (
+            !/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}/.test(
+              password[0]
+            )
+          ) {
+            return res.status(400).send({
+              message:
+                "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character!",
+            });
+          }
+
+          // validate age
+          console.log("age", age[0]);
+          if (
+            // typeof age[0] !== "number" ||
+            parseInt(age[0]) < 10 ||
+            parseInt(age[0]) > 120
+          ) {
+            return res.status(400).send({ message: "Invalid age value!" });
+          }
+          // check if the email already exists
+          const user = await User.findOne({ email: email[0] });
+          if (user) {
+            return res.status(400).send({ message: "Email already exists!" });
+          }
+          const newUser = new User({
+            fullname: fullname[0],
+            email: email[0],
+            sex: sex[0],
+            age: age[0],
+            profilePicture: imagePath,
+            password: bcrypt.hashSync(password[0], 8),
+          });
+          await newUser
+            .save()
+            .then(async (result) => {
+              const token = await createToken(result._id);
+              res.cookie("token", token, {
+                httpOnly: true,
+                maxAge: maxAge * 1000,
+              });
+              // res.status(201).send({
+              //   id: result._id,
+              //   fullname: result.fullname,
+              //   email: result.email,
+              //   token,
+              // });
+              res.status(201).send({ user: result, token: token });
+            })
+            .catch((err) => {
+              // console.log(err);
+              res.status(400).send(err);
+            });
+          // res.send(fields);
         }
-        console.log("File uploaded successfully", newPath);
+        // console.log("File uploaded successfully", newPath);
       });
     });
   });

@@ -1,7 +1,7 @@
+const mongoose = require("mongoose");
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { token } = require("morgan");
 require("dotenv").config();
 
 const maxAge = 3 * 24 * 60 * 60;
@@ -27,16 +27,52 @@ module.exports.index = async (req, res) => {
 };
 
 module.exports.registerUser = async (req, res) => {
-  const user = await User.findOne({ email: req.body.email });
+  const { username, email, password, sex, age } = req.body;
+  // validate the input
+  if (!username || !email || !password || !sex || !age) {
+    return res.status(400).send({ message: "All fields are required!" });
+  }
+  if (password.length < 6) {
+    return res
+      .status(400)
+      .send({ message: "Password must be at least 6 characters long!" });
+  }
+
+  // validate sex enum
+  if (!["male", "female"].includes(sex)) {
+    return res.status(400).json({ message: "Invalid sex value" });
+  }
+
+  if (
+    // regex to validate email format
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+    // regex to validate
+  ) {
+    return res.status(400).send({ message: "Invalid email format!" });
+  }
+
+  // regex to validate password strength
+  if (
+    !/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}/.test(
+      password
+    )
+  ) {
+    return res.status(400).send({
+      message:
+        "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character!",
+    });
+  }
+  // check if the email already exists
+  const user = await User.findOne({ email });
   if (user) {
-    return res.status(400).send({ message: "Email already exist !" });
+    return res.status(400).send({ message: "Email already exists!" });
   }
   const newUser = new User({
-    name: req.body.name,
-    email: req.body.email,
-    isAdimn: req.body.isAdmin,
-    aggrement: req.body.aggrement,
-    password: bcrypt.hashSync(req.body.password, 8),
+    name: username,
+    email: email,
+    sex: sex,
+    age: age,
+    password: bcrypt.hashSync(password, 8),
   });
 
   await newUser
@@ -59,6 +95,14 @@ module.exports.registerUser = async (req, res) => {
 };
 
 module.exports.getUser = async (req, res) => {
+  // check the id is valid
+  if (!req.params.id) {
+    return res.status(400).send({ message: "User ID is required" });
+  }
+  // isValidObjectId(req.params.id) is a mongoose method to check if the id is valid
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).send({ message: "Invalid User ID" });
+  }
   await User.findById(req.params.id)
     .select("-password")
     .then((user) => {

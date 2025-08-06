@@ -14,13 +14,17 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  aggrement: {
-    type: Boolean,
-    required: true,
-  },
-  isAdimn: {
+  sex: {
     type: String,
-    default: false,
+    enum: ["male", "female"],
+  },
+  age: {
+    type: Number,
+    min: 0,
+  },
+  profilePicture: {
+    type: String,
+    default: "https://example.com/default-profile.png",
   },
 });
 userSchema.virtual("id").get(function () {

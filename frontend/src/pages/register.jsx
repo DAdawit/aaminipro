@@ -8,18 +8,35 @@ import useUser from "../hooks/use-user";
 import api from "../lib/axios-instance";
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
-const registerSchema = z.object({
-    email: z.string()
+export const registerSchema = z.object({
+    fullName: z
+        .string()
+        .min(1, "Full name is required")
+        .max(100, "Full name must be at most 100 characters"),
+
+    role: z.enum(["user", "admin", "editor"], {
+        required_error: "Role is required",
+    }),
+
+    gender: z.enum(["male", "female", "other"], {
+        required_error: "Gender is required",
+    }),
+
+    email: z
+        .string()
         .min(1, "Email is required")
         .email("Invalid email address")
         .max(100, "Email must be at most 100 characters"),
-    password: z.string()
+
+    password: z
+        .string()
         .min(8, "Password must be at least 8 characters")
         .max(32, "Password must be at most 32 characters")
         .regex(
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/,
             "Password must contain at least one uppercase, one lowercase, one number and one special character"
         ),
+
     profile: z
         .instanceof(FileList)
         .refine((files) => files.length === 1, "Only one file is allowed")
@@ -27,7 +44,7 @@ const registerSchema = z.object({
         .refine(
             (files) => ACCEPTED_IMAGE_TYPES.includes(files[0]?.type),
             "Only .jpg, .jpeg, .png formats are supported"
-        )
+        ),
 });
 const Registration = () => {
     const { login } = useUser();
@@ -51,8 +68,10 @@ const Registration = () => {
     });
 
     const onSubmit = async (data) => {
+        console.log(data, 'data')
         try {
-            const response = api.post('/register',data)
+            const response = await api.post('/users', data)
+            console.log('response', response)
             setServerError(null);
             console.log(data, 'data')
             // navigate('/');
@@ -71,7 +90,6 @@ const Registration = () => {
                         {serverError}
                     </div>
                 )}
-
                 <RegisterForm
                     onSubmit={handleSubmit(onSubmit)}
                     control={control}

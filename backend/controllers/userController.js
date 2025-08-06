@@ -134,3 +134,16 @@ module.exports.getUserId = (req) => {
     }
   });
 };
+
+import axios from "axios";
+export const devBaseurl = "http://127.0.0.1:4000/api";
+const api = axios.create({
+  baseURL: devBaseurl,
+});
+let token = null;
+
+if (token) {
+  api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+}
+
+export default api;

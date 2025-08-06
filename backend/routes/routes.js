@@ -87,8 +87,15 @@ router.post("/upload-file", function async(req, res) {
   //     });
   //   });
   // });
+  try {
+    const path = fileUploader(req, "products");
+    res.send(path);
+  } catch (error) {
+    console.error("Error during file upload:", error);
+    return res.status(500).send("Internal Server Error");
+  }
   const path = fileUploader(req, res, "products");
-  res.status(200).send(path);
+  res.send(path);
 });
 
 module.exports = router;

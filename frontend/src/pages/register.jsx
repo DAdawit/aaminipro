@@ -106,22 +106,9 @@ const Registration = () => {
   // };
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center p-6 md:p-10 bg-gray-50">
-      {/* <div className="w-full max-w-sm space-y-4">
-        {serverError && (
-          <div className="p-3 text-sm text-red-700 bg-red-100 rounded-md">
-            {serverError}
-          </div>
-        )} */}
-      <RegistrationForm
-      // onSubmit={handleSubmit(onSubmit)}
-      // control={control}
-      // errors={errors}
-      // isSubmitting={isSubmitting}
-      // serverError={serverError}
-      />
+    <div className="">
+      <RegistrationForm />
     </div>
-    // </div>
   );
 };
 

@@ -1,13 +1,16 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function RegistrationForm() {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm();
+  const navigate = useNavigate();
 
   const onSubmit = async (data) => {
     // Build user object without the file itself
@@ -34,19 +37,20 @@ export default function RegistrationForm() {
         "http://localhost:4000/api/users",
         formData
       );
+      sessionStorage.setItem("authToken", JSON.stringify(response.data.token));
       console.log("Server Response:", response.data);
+      reset();
+      navigate("/dashboard");
     } catch (error) {
       console.error(error);
     }
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="space-y-4 p-4 max-w-md mx-auto"
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="">
+      <h1 className="text-2xl font-bold mb-4">Register</h1>
       <div>
-        <label>Full Name</label>
+        <label className="text-gray-700">Full Name</label>
         <input
           type="text"
           {...register("fullname", {
@@ -132,7 +136,7 @@ export default function RegistrationForm() {
         )}
       </div>
 
-      <button type="submit" className="bg-blue-600 text-white p-2 rounded">
+      <button type="submit" className="bg-blue-600 text-white p-2 rounded mt-3">
         Register
       </button>
     </form>

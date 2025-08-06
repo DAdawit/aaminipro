@@ -1,0 +1,87 @@
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "react-router-dom";
+import { RegisterForm } from "../components/register-form";
+import z from "zod";
+import useUser from "../hooks/use-user";
+import api from "../lib/axios-instance";
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
+const registerSchema = z.object({
+    email: z.string()
+        .min(1, "Email is required")
+        .email("Invalid email address")
+        .max(100, "Email must be at most 100 characters"),
+    password: z.string()
+        .min(8, "Password must be at least 8 characters")
+        .max(32, "Password must be at most 32 characters")
+        .regex(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+            "Password must contain at least one uppercase, one lowercase, one number and one special character"
+        ),
+    profile: z
+        .instanceof(FileList)
+        .refine((files) => files.length === 1, "Only one file is allowed")
+        .refine((files) => files[0]?.size <= MAX_FILE_SIZE, "Max file size is 5MB")
+        .refine(
+            (files) => ACCEPTED_IMAGE_TYPES.includes(files[0]?.type),
+            "Only .jpg, .jpeg, .png formats are supported"
+        )
+});
+const Registration = () => {
+    const { login } = useUser();
+    const navigate = useNavigate();
+    const [serverError, setServerError] = useState(null);
+
+    const {
+        handleSubmit,
+        control,
+        formState: { errors, isSubmitting },
+        reset,
+        setError,
+    } = useForm({
+        resolver: zodResolver(registerSchema),
+        mode: "onBlur",
+        defaultValues: {
+            email: "",
+            password: "",
+            profile: ""
+        },
+    });
+
+    const onSubmit = async (data) => {
+        try {
+            const response = api.post('/register',data)
+            setServerError(null);
+            console.log(data, 'data')
+            // navigate('/');
+            // Reset form
+            reset();
+        } catch (error) {
+        }
+    };
+
+    return (
+        <div className="flex min-h-screen w-full items-center justify-center p-6 md:p-10 bg-gray-50">
+            <div className="w-full max-w-sm space-y-4">
+
+                {serverError && (
+                    <div className="p-3 text-sm text-red-700 bg-red-100 rounded-md">
+                        {serverError}
+                    </div>
+                )}
+
+                <RegisterForm
+                    onSubmit={handleSubmit(onSubmit)}
+                    control={control}
+                    errors={errors}
+                    isSubmitting={isSubmitting}
+                    serverError={serverError}
+                />
+            </div>
+        </div>
+    );
+};
+
+export default Registration;

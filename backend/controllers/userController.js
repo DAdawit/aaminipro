@@ -26,6 +26,16 @@ module.exports.index = async (req, res) => {
   res.status(200).send(users);
 };
 
+module.exports.getUserCount = async (req, res) => {
+  try {
+    const count = await User.countDocuments();
+    res.status(200).send({ count });
+  } catch (error) {
+    console.error("Error fetching user count:", error);
+    res.status(500).send({ message: "Internal server error" });
+  }
+};
+
 module.exports.registerUser = async (req, res) => {
   const { username, email, password, sex, age } = req.body;
   // validate the input
@@ -37,20 +47,17 @@ module.exports.registerUser = async (req, res) => {
       .status(400)
       .send({ message: "Password must be at least 6 characters long!" });
   }
-
   // validate sex enum
   if (!["male", "female"].includes(sex)) {
     return res.status(400).json({ message: "Invalid sex value" });
   }
-
+  // regex to validate email format
   if (
-    // regex to validate email format
     !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
     // regex to validate
   ) {
     return res.status(400).send({ message: "Invalid email format!" });
   }
-
   // regex to validate password strength
   if (
     !/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}/.test(
@@ -61,6 +68,11 @@ module.exports.registerUser = async (req, res) => {
       message:
         "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character!",
     });
+  }
+
+  // validate age
+  if (typeof age !== "number" || age < 10 || age > 120) {
+    return res.status(400).send({ message: "Invalid age value!" });
   }
   // check if the email already exists
   const user = await User.findOne({ email });

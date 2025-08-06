@@ -24,7 +24,7 @@ const userSchema = mongoose.Schema({
   },
   profilePicture: {
     type: String,
-    default: "https://example.com/default-profile.png",
+    default: null,
   },
 });
 userSchema.virtual("id").get(function () {

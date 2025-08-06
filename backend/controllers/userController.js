@@ -198,3 +198,31 @@ module.exports.deleteUser = async (req, res) => {
       return res.status(500).send({ message: "Internal Server Error" });
     });
 };
+
+module.exports.updateUser = async (req, res) => {
+  if (!req.params.id) {
+    return res.status(400).send({ message: "User ID is required" });
+  }
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).send({ message: "Invalid User ID" });
+  }
+
+  const { name, email, sex, age, profilePicture } = req.body;
+
+  await User.findByIdAndUpdate(req.params.id, {
+    name,
+    email,
+    sex,
+    age,
+  })
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send({ message: "User not found" });
+      }
+      res.status(200).send({ message: "User updated successfully" });
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.status(500).send({ message: "Internal Server Error" });
+    });
+};

@@ -17,6 +17,7 @@ router.get("/logout", userController.logout);
 router.get("/verifyToken", userController.verifyToken);
 
 router.delete("/users/:id", userController.deleteUser);
+router.put("/users/:id", userController.updateUser);
 router.post("/upload-file", function async(req, res) {
   // const form = new formidable.IncomingForm();
   // form.parse(req, function (err, fields, files) {

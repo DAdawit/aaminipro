@@ -1,22 +1,21 @@
-import { Routes, Route } from 'react-router-dom'
-import ProtectedRoute from './routes/protected-route'
-import RootLayout from './layouts/main-layout'
-import AuthLayout from './layouts/auth-layout'
+import { Routes, Route } from "react-router-dom";
+import ProtectedRoute from "./routes/protected-route";
+import RootLayout from "./layouts/main-layout";
+import AuthLayout from "./layouts/auth-layout";
 
-import Login from './pages/login'
-import Registration from './pages/register'
-import Unauthorized from './pages/unauthorized'
-import NotFound from './pages/not-found'
-import Home from './pages/Home'
+import Login from "./pages/login";
+import Registration from "./pages/register";
+import Unauthorized from "./pages/unauthorized";
+import NotFound from "./pages/not-found";
+import Home from "./pages/Home";
 
 function App() {
   return (
     <Routes>
-
       {/* Protected Routes */}
-      <Route element={<ProtectedRoute allowedRoles={['admin', 'user']} />}>
+      <Route element={<ProtectedRoute allowedRoles={["admin", "user"]} />}>
         <Route element={<RootLayout />}>
-          <Route path="/" element={<Home />} />
+          <Route path="/dashboard" element={<Home />} />
         </Route>
       </Route>
 
@@ -30,7 +29,7 @@ function App() {
       {/* Not Found */}
       <Route path="*" element={<NotFound />} />
     </Routes>
-  )
+  );
 }
 
-export default App
+export default App;

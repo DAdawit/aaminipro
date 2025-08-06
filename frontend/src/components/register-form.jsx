@@ -2,6 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { notify } from "../tostMessage";
 
 export default function RegistrationForm() {
   const {
@@ -41,6 +42,7 @@ export default function RegistrationForm() {
       console.log("Server Response:", response.data);
       reset();
       navigate("/dashboard");
+      notify("Registration successful!", "success");
     } catch (error) {
       console.error(error);
     }

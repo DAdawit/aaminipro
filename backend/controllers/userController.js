@@ -37,9 +37,9 @@ module.exports.getUserCount = async (req, res) => {
 };
 
 module.exports.registerUser = async (req, res) => {
-  const { fullname, email, password, sex, age } = req.body;
+  const { fullname, email, password, sex, age, role } = req.body;
   // validate the input
-  if (!fullname || !email || !password || !sex || !age) {
+  if ((!fullname || !email || !password || !sex || !age, !role)) {
     return res.status(400).send({
       message: "All fields are required!",
       fields: "name,email,password,sex,age",
@@ -71,6 +71,11 @@ module.exports.registerUser = async (req, res) => {
       message:
         "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character!",
     });
+  }
+
+  // validate role
+  if (!["guest", "admin"].includes(role)) {
+    return res.status(400).json({ message: "Invalid role value" });
   }
 
   // validate age

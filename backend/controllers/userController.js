@@ -179,15 +179,22 @@ module.exports.getUserId = (req) => {
   });
 };
 
-import axios from "axios";
-export const devBaseurl = "http://127.0.0.1:4000/api";
-const api = axios.create({
-  baseURL: devBaseurl,
-});
-let token = null;
-
-if (token) {
-  api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-}
-
-export default api;
+module.exports.deleteUser = async (req, res) => {
+  if (!req.params.id) {
+    return res.status(400).send({ message: "User ID is required" });
+  }
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).send({ message: "Invalid User ID" });
+  }
+  await User.findByIdAndDelete(req.params.id)
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send({ message: "User not found" });
+      }
+      res.status(200).send({ message: "User deleted successfully" });
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.status(500).send({ message: "Internal Server Error" });
+    });
+};

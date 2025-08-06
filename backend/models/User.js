@@ -20,7 +20,8 @@ const userSchema = mongoose.Schema({
   },
   age: {
     type: Number,
-    min: 0,
+    min: 10,
+    max: 120,
   },
   profilePicture: {
     type: String,

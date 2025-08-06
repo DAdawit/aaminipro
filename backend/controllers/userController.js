@@ -114,7 +114,9 @@ module.exports.registerUser = async (req, res) => {
           console.log(err);
           return res.status(500).send("File save error");
         } else {
+          // console.log(fields);
           const { fullname, email, password, sex, age } = fields;
+
           if (!fullname || !email || !password || !sex || !age) {
             return res.status(400).send({
               message: "All fields are required!",

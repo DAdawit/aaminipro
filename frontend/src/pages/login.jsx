@@ -4,6 +4,8 @@ import { z } from "zod";
 import { LoginForm } from "../components/login-form";
 import useUser from "../hooks/use-user";
 import { useNavigate } from "react-router-dom";
+import api from "../lib/axios-instance";
+import { useState } from "react";
 
 // Zod validation schema
 const loginSchema = z.object({
@@ -16,6 +18,7 @@ const loginSchema = z.object({
 
 const Login = () => {
     const { login } = useUser()
+    const [error, setError] = useState('')
     const navigate = useNavigate()
     const {
         handleSubmit,
@@ -35,28 +38,37 @@ const Login = () => {
         console.log({ ...data, token: 'eyey' })
         login({ ...data, token: 'yes' })
         navigate('/')
-        // try {
-        //     const response = await axios.post('/api/auth/login', data, {
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //             // 'X-XSRF-TOKEN': 'jjjj'  //protection
-        //         },
-        //         withCredentials: true
-        //     });
-        //     reset();
-        // } catch (error) {
-        //     console.error("Login error:", error);
-        // }
+        try {
+            const response = await api.post('/login', data);
+            const { token, role } = response.data
+            if (response.data.status !== 'Success') {
+                return setError('Something go wrong. Tray again.')
+            }
+            if (token) {
+                switch (role) {
+                    case 'Admin':
+                        navigate('/admin')
+                    case 'user':
+                        navigate('/user')
+                    default:
+                        navigate('/login')
+                }
+
+            }
+            reset();
+        } catch (error) {
+            console.error("Login error:", error);
+        }
     };
 
     return (
         <div className="flex min-h-screen w-full items-center justify-center bg-gray-50 p-6 md:p-10">
-                <LoginForm
-                    onSubmit={handleSubmit(onSubmit)}
-                    control={control}
-                    errors={errors}
-                    isSubmitting={isSubmitting}
-                />
+            <LoginForm
+                onSubmit={handleSubmit(onSubmit)}
+                control={control}
+                errors={errors}
+                isSubmitting={isSubmitting}
+            />
         </div>
     );
 };

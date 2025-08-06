@@ -42,6 +42,94 @@ export const RegisterForm = React.memo(
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={onSubmit} className="space-y-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="fullName">Full Name</Label>
+                            <Controller
+                                name="fullName"
+                                control={control}
+                                render={({ field }) => (
+                                    <Input
+                                        {...field}
+                                        id="fullName"
+                                        type="text"
+                                        placeholder="John Doe"
+                                        autoComplete="name"
+                                        aria-invalid={errors.fullName ? "true" : "false"}
+                                        className={errors.fullName && "border-destructive"}
+                                    />
+                                )}
+                            />
+                            {errors.fullName && (
+                                <p className="text-sm text-destructive mt-1">
+                                    {errors.fullName.message}
+                                </p>
+                            )}
+                        </div>
+
+                        {/* Role Field (Dropdown) */}
+                        <div className="space-y-2">
+                            <Label htmlFor="role">Role</Label>
+                            <Controller
+                                name="role"
+                                control={control}
+                                render={({ field }) => (
+                                    <select
+                                        {...field}
+                                        id="role"
+                                        className={`w-full border rounded-md px-3 py-2 text-sm focus:outline-none ${errors.role ? "border-destructive" : "border-gray-300"
+                                            }`}
+                                    >
+                                        <option value="">Select Role</option>
+                                        <option value="user">User</option>
+                                        <option value="admin">Admin</option>
+                                        <option value="editor">Editor</option>
+                                    </select>
+                                )}
+                            />
+                            {errors.role && (
+                                <p className="text-sm text-destructive mt-1">
+                                    {errors.role.message}
+                                </p>
+                            )}
+                        </div>
+
+                        {/* Gender Field (Radio Buttons) */}
+                        <div className="space-y-2">
+                            <Label htmlFor="gender">Gender</Label>
+                            <Controller
+                                name="gender"
+                                control={control}
+                                render={({ field }) => (
+                                    <div className="flex items-center gap-4">
+                                        <label className="flex items-center space-x-2">
+                                            <input
+                                                {...field}
+                                                type="radio"
+                                                value="male"
+                                                checked={field.value === "male"}
+                                                className="accent-primary"
+                                            />
+                                            <span>Male</span>
+                                        </label>
+                                        <label className="flex items-center space-x-2">
+                                            <input
+                                                {...field}
+                                                type="radio"
+                                                value="female"
+                                                checked={field.value === "female"}
+                                                className="accent-primary"
+                                            />
+                                            <span>Female</span>
+                                        </label>
+                                    </div>
+                                )}
+                            />
+                            {errors.gender && (
+                                <p className="text-sm text-destructive mt-1">
+                                    {errors.gender.message}
+                                </p>
+                            )}
+                        </div>
                         {/* Email Field */}
                         <div className="space-y-2">
                             <Label htmlFor="email">Email</Label>
@@ -146,7 +234,7 @@ export const RegisterForm = React.memo(
 
                         <Button
                             type="submit"
-                            className="w-full"
+                            className="w-full cursor-pointer"
                             disabled={isSubmitting}
                         >
                             {isSubmitting ? (

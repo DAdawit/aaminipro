@@ -1,12 +1,10 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate } from "react-router-dom";
-import { RegisterForm } from "../components/register-form";
+import { useNavigate, useParams } from "react-router-dom";
 import z from "zod";
-import useUser from "../hooks/use-user";
-import api from "../lib/axios-instance";
 import axios from "axios";
+import { UPdateForm } from "../components/update-form";
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
 export const registerSchema = z.object({
@@ -15,9 +13,6 @@ export const registerSchema = z.object({
         .min(1, "Full name is required")
         .max(100, "Full name must be at most 100 characters"),
 
-    role: z.enum(["user", "admin", "editor"], {
-        required_error: "Role is required",
-    }),
 
     gender: z.enum(["male", "female", "other"], {
         required_error: "Gender is required",
@@ -28,27 +23,32 @@ export const registerSchema = z.object({
         .min(1, "Email is required")
         .email("Invalid email address")
         .max(100, "Email must be at most 100 characters"),
-
-    password: z
-        .string()
-        .min(8, "Password must be at least 8 characters")
-        .max(32, "Password must be at most 32 characters")
-        .regex(
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/,
-            "Password must contain at least one uppercase, one lowercase, one number and one special character"
-        ),
-
-    profile: z
-        .instanceof(FileList)
-        .refine((files) => files.length === 1, "Only one file is allowed")
-        .refine((files) => files[0]?.size <= MAX_FILE_SIZE, "Max file size is 5MB")
-        .refine(
-            (files) => ACCEPTED_IMAGE_TYPES.includes(files[0]?.type),
-            "Only .jpg, .jpeg, .png formats are supported"
-        ),
 });
-const Registration = () => {
-    const { login } = useUser();
+const UpdateUsers = () => {
+    const { userId } = useParams()
+    const [user, setUser] = useState([])
+    const [successMsg, setSuccessMesg] = useState('')
+    const fetchUsers = async () => {
+        try {
+            const response = await axios.get(`http://127.0.0.1:4000/api/users/${userId}`)
+            console.log(response, 'response')
+            if (response.data) {
+                setUser(response.data)
+            }
+            reset({
+                fullName: user.fullName ,
+                email: user.email ,
+                gender: user.gender ,
+            });
+        } catch (error) {
+            setError('Something go wrong')
+            console.log(error)
+        }
+    }
+    useEffect(() => {
+        fetchUsers()
+    }, [userId])
+    let n = 1
     const navigate = useNavigate();
     const [serverError, setServerError] = useState(null);
 
@@ -61,6 +61,7 @@ const Registration = () => {
     } = useForm({
         resolver: zodResolver(registerSchema),
         mode: "onBlur",
+        defaultValues: { ...user }
     });
 
     const onSubmit = async (data) => {
@@ -96,16 +97,17 @@ const Registration = () => {
                         {serverError}
                     </div>
                 )}
-                <RegisterForm
+                <UPdateForm
                     onSubmit={handleSubmit(onSubmit)}
                     control={control}
                     errors={errors}
                     isSubmitting={isSubmitting}
                     serverError={serverError}
+                    value={user}
                 />
             </div>
         </div>
     );
 };
 
-export default Registration;
+export default UpdateUsers;

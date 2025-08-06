@@ -5,13 +5,13 @@ const userSlice = createSlice({
     initialState: {
         email: null,
         role: null,
-        token: null
+        token: 'jsjsj'
     },
     reducers: {
         setCredentials: (state, action) => {
             return { ...state, ...action.payload }
         },
-        logOut: (state, action) => {
+        logOut: (state) => {
             state.email = null,
                 state.role = null,
                 state.token = null

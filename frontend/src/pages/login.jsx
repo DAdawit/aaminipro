@@ -6,6 +6,7 @@ import useUser from "../hooks/use-user";
 import { useNavigate } from "react-router-dom";
 import api from "../lib/axios-instance";
 import { useState } from "react";
+import axios from "axios";
 
 // Zod validation schema
 const loginSchema = z.object({
@@ -35,16 +36,15 @@ const Login = () => {
     });
 
     const onSubmit = async (data) => {
-        console.log({ ...data, token: 'eyey' })
-        login({ ...data, token: 'yes' })
-        navigate('/')
+        console.log(data)
         try {
-            const response = await api.post('/login', data);
+            const response = await axios.post('http://127.0.0.1:4000/api/login', data);
             const { token, role } = response.data
-            if (response.data.status !== 'Success') {
+            if (response.status !== '200') {
                 return setError('Something go wrong. Tray again.')
             }
             if (token) {
+                login({ role, token })
                 switch (role) {
                     case 'Admin':
                         navigate('/admin')
@@ -57,12 +57,17 @@ const Login = () => {
             }
             reset();
         } catch (error) {
+            setError('Something go wrong. Tray again.')
+
             console.error("Login error:", error);
         }
     };
 
     return (
-        <div className="flex min-h-screen w-full items-center justify-center bg-gray-50 p-6 md:p-10">
+        <div className="flex flex-col min-h-screen w-full items-center justify-center bg-gray-50 p-6 md:p-10">
+            {error &&
+                <p className="text-red-500">{error}</p>
+            }
             <LoginForm
                 onSubmit={handleSubmit(onSubmit)}
                 control={control}

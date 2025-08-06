@@ -13,8 +13,8 @@ export const api = axios.create({
 })
 
 export default api;
-export const unauthenticatedApi = api
-unauthenticatedApi.interceptors.request.use(
+export const authenticatedApi = api
+authenticatedApi.interceptors.request.use(
     (config) => {
         const token = sessionStorage.getItem('token')
         if (token) {
@@ -24,7 +24,7 @@ unauthenticatedApi.interceptors.request.use(
         (error) => promise.reject(error)
     }
 )
-unauthenticatedApi.interceptors.response.use(
+authenticatedApi.interceptors.response.use(
     (response) => response,
     (error) => {
         // ToDo add diffrent error responses.

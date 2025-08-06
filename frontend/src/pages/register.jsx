@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { RegisterForm } from "../components/register-form";
 import z from "zod";
 import useUser from "../hooks/use-user";
-import api from "../lib/axios-instance";
+// import api from "../lib/axios-instance";
+import axios from "axios";
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
 export const registerSchema = z.object({
@@ -14,7 +15,7 @@ export const registerSchema = z.object({
     .min(1, "Full name is required")
     .max(100, "Full name must be at most 100 characters"),
 
-  role: z.enum(["user", "admin", "editor"], {
+  role: z.enum(["guest", "admin"], {
     required_error: "Role is required",
   }),
 
@@ -68,16 +69,37 @@ const Registration = () => {
   });
 
   const onSubmit = async (data) => {
-    console.log(data, "data");
+    console.log({ data });
+    const formData = new FormData();
+
+    formData.append("fullname", data.fullName);
+    formData.append("email", data.email);
+    formData.append("sex", data.sex);
+    formData.append("age", data.age);
+    formData.append("password", data.password);
+
+    // Object.keys(data).forEach((key) => {
+    //   console.log({ key });
+    //   formData.append(key, data[key]);
+    // });
+    console.log(formData, "form-data");
     try {
-      const response = await api.post("/users", data);
+      const response = await axios.post(
+        "http://localhost:4000/api/users",
+        formData,
+        {
+          "Content-Type": "multipart/form-data",
+        }
+      );
       console.log("response", response);
       setServerError(null);
       console.log(data, "data");
       // navigate('/');
       // Reset form
       reset();
-    } catch (error) {}
+    } catch (error) {
+      console.log({ error });
+    }
   };
 
   return (

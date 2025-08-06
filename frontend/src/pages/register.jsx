@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { RegisterForm } from "../components/register-form";
 import z from "zod";
 import useUser from "../hooks/use-user";
+import api from "../lib/axios-instance";
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
 const registerSchema = z.object({
@@ -51,7 +52,7 @@ const Registration = () => {
 
     const onSubmit = async (data) => {
         try {
-            const response = 
+            const response = api.post('/register',data)
             setServerError(null);
             console.log(data, 'data')
             // navigate('/');

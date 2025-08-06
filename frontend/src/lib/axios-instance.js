@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import { promise } from "zod";
-const BASE_URL = ''
+const BASE_URL = 'http://127.0.0.1:4000/api'
 export const api = axios.create({
     baseURL: BASE_URL,
     timeout: '10000',
@@ -12,6 +12,7 @@ export const api = axios.create({
     }
 })
 
+export default api;
 export const unauthenticatedApi = api
 unauthenticatedApi.interceptors.request.use(
     (config) => {

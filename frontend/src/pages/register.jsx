@@ -6,6 +6,7 @@ import { RegisterForm } from "../components/register-form";
 import z from "zod";
 import useUser from "../hooks/use-user";
 import api from "../lib/axios-instance";
+import { setCredentials } from "../store/features/user-slice";
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
 const registerSchema = z.object({
@@ -32,6 +33,7 @@ const registerSchema = z.object({
 const Registration = () => {
     const { login } = useUser();
     const navigate = useNavigate();
+    const dispatch = useDispatch()
     const [serverError, setServerError] = useState(null);
 
     const {
@@ -51,12 +53,14 @@ const Registration = () => {
     });
 
     const onSubmit = async (data) => {
+        console.log(data, 'data')
         try {
-            const response = api.post('/register',data)
+            const response = api.post('/register', data)
+            if (response.data.status !== "Success") {
+                setError('Something go wrong please try again.')
+            }
+            sessionStorage.setItem('token', response.data.token)
             setServerError(null);
-            console.log(data, 'data')
-            // navigate('/');
-            // Reset form
             reset();
         } catch (error) {
         }

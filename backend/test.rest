@@ -1,0 +1,25 @@
+POST http://localhost:4000/api/users
+Content-Type: application/json
+
+{
+  "fullname": "testuser11",
+  "email": "testuser11@example.com",
+  "password": "Test@1234",
+  "sex": "male",
+  "age": 65
+}
+
+###
+POST http://localhost:4000/api/users
+Content-Type: application/json
+
+{
+  "username": "testusers",
+  "email": "testusers@example.com",
+  "password": "Test*1234",
+  "sex": "male",
+  "age": 1
+}
+
+###
+GET http://localhost:4000/api/users/

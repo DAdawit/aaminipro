@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const userSchema = mongoose.Schema({
-  name: {
+  fullname: {
     type: String,
     required: true,
   },
@@ -10,17 +10,28 @@ const userSchema = mongoose.Schema({
     required: true,
     unique: true,
   },
+  role: {
+    type: String,
+    enum: ["guest", "admin"],
+    required: true,
+    default: "guest",
+  },
   password: {
     type: String,
     required: true,
   },
-  aggrement: {
-    type: Boolean,
-    required: true,
-  },
-  isAdimn: {
+  sex: {
     type: String,
-    default: false,
+    enum: ["male", "female"],
+  },
+  age: {
+    type: Number,
+    min: 10,
+    max: 120,
+  },
+  profilePicture: {
+    type: String,
+    default: null,
   },
 });
 userSchema.virtual("id").get(function () {

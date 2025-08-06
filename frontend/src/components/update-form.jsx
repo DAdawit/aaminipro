@@ -108,24 +108,25 @@ export const UPdateForm = React.memo(
                             <Controller
                                 name="gender"
                                 control={control}
+                                defaultValue={'male'}
                                 render={({ field }) => (
                                     <div className="flex items-center gap-4">
                                         <label className="flex items-center space-x-2">
                                             <input
-                                                {...field}
                                                 type="radio"
                                                 value="male"
                                                 checked={field.value === "male"}
+                                                onChange={field.onChange}
                                                 className="accent-primary"
                                             />
                                             <span>Male</span>
                                         </label>
                                         <label className="flex items-center space-x-2">
                                             <input
-                                                {...field}
                                                 type="radio"
                                                 value="female"
                                                 checked={field.value === "female"}
+                                                onChange={field.onChange}
                                                 className="accent-primary"
                                             />
                                             <span>Female</span>
@@ -134,11 +135,10 @@ export const UPdateForm = React.memo(
                                 )}
                             />
                             {errors.gender && (
-                                <p className="text-sm text-destructive mt-1">
-                                    {errors.gender.message}
-                                </p>
+                                <p className="text-sm text-destructive mt-1">{errors.gender.message}</p>
                             )}
                         </div>
+
 
                         {/* Email */}
                         <div className="space-y-2">

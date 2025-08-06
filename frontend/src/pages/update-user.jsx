@@ -36,9 +36,9 @@ const UpdateUsers = () => {
                 setUser(response.data)
             }
             reset({
-                fullName: user.fullName ,
-                email: user.email ,
-                gender: user.gender ,
+                fullName: user.fullName,
+                email: user.email,
+                gender: user.gender,
             });
         } catch (error) {
             setError('Something go wrong')
@@ -65,26 +65,16 @@ const UpdateUsers = () => {
     });
 
     const onSubmit = async (data) => {
-        const formData = new FormData();
-
-        Object.entries(data).forEach(([key, value]) => {
-            if (key === 'profile' && value instanceof FileList) {
-                if (value.length > 0) {
-                    formData.append(key, value[0]);
-                }
-            } else {
-                formData.append(key, value);
-            }
-        }); console.log(data, 'data')
+        console.log(data, 'data')
         try {
-            const response = await axios.post('http://127.0.0.1:4000/api', formData)
+            const response = await axios.put(`http://127.0.0.1:4000/api/users/${userId}`, data)
             console.log('response', response)
             setServerError(null);
             console.log(data, 'data')
-            // navigate('/');
-            // Reset form
+            navigate('/users');
             reset();
         } catch (error) {
+            console.log(error)
         }
     };
 

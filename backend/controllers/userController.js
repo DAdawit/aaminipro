@@ -39,51 +39,6 @@ module.exports.getUserCount = async (req, res) => {
 };
 
 module.exports.registerUser = async (req, res) => {
-  // const { fullname, email, password, sex, age } = req.body;
-  // // validate the input
-  // if (!fullname || !email || !password || !sex || !age) {
-  //   return res.status(400).send({
-  //     message: "All fields are required!",
-  //     fields: "name,email,password,sex,age",
-  //   });
-  // }
-  // if (password.length < 6) {
-  //   return res
-  //     .status(400)
-  //     .send({ message: "Password must be at least 6 characters long!" });
-  // }
-  // // validate sex enum
-  // if (!["male", "female"].includes(sex)) {
-  //   return res.status(400).json({ message: "Invalid sex value" });
-  // }
-  // // regex to validate email format
-  // if (
-  //   !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-  //   // regex to validate
-  // ) {
-  //   return res.status(400).send({ message: "Invalid email format!" });
-  // }
-  // // regex to validate password strength
-  // if (
-  //   !/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}/.test(
-  //     password
-  //   )
-  // ) {
-  //   return res.status(400).send({
-  //     message:
-  //       "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character!",
-  //   });
-  // }
-
-  // // validate age
-  // if (typeof age !== "number" || age < 10 || age > 120) {
-  //   return res.status(400).send({ message: "Invalid age value!" });
-  // }
-  // // check if the email already exists
-  // const user = await User.findOne({ email });
-  // if (user) {
-  //   return res.status(400).send({ message: "Email already exists!" });
-  // }
   let imagePath = "";
 
   const form = new formidable.IncomingForm();
@@ -181,52 +136,18 @@ module.exports.registerUser = async (req, res) => {
                 httpOnly: true,
                 maxAge: maxAge * 1000,
               });
-              // res.status(201).send({
-              //   id: result._id,
-              //   fullname: result.fullname,
-              //   email: result.email,
-              //   token,
-              // });
+
               res.status(201).send({ user: result, token: token });
             })
             .catch((err) => {
-              // console.log(err);
+              console.log(err);
               res.status(400).send(err);
             });
-          // res.send(fields);
         }
-        // console.log("File uploaded successfully", newPath);
       });
     });
   });
   return 0;
-
-  // const newUser = new User({
-  //   fullname: fullname,
-  //   email: email,
-  //   sex: sex,
-  //   age: age,
-  //   profilePicture: imagePath,
-  //   password: bcrypt.hashSync(password, 8),
-  // });
-
-  // await newUser
-  //   .save()
-  //   .then(async (result) => {
-  //     const token = await createToken(result._id);
-  //     res.cookie("token", token, { httpOnly: true, maxAge: maxAge * 1000 });
-  //     res.status(201).send({
-  //       id: result._id,
-  //       fullname: result.fullname,
-  //       email: result.email,
-  //       token,
-  //     });
-  //     // res.status(201).send({ user: result, token: token });
-  //   })
-  //   .catch((err) => {
-  //     // console.log(err);
-  //     res.status(400).send(err);
-  //   });
 };
 
 module.exports.getUser = async (req, res) => {
@@ -344,7 +265,7 @@ module.exports.updateUser = async (req, res) => {
     return res.status(400).send({ message: "Invalid User ID" });
   }
 
-  const { fullname, email, sex, ag } = req.body;
+  const { fullname, email, sex, age } = req.body;
 
   await User.findByIdAndUpdate(req.params.id, {
     fullname,
@@ -360,7 +281,9 @@ module.exports.updateUser = async (req, res) => {
     })
     .catch((err) => {
       console.log(err);
-      return res.status(500).send({ message: "Internal Server Error" });
+      return res
+        .status(500)
+        .send({ message: err.message || "Internal Server Error" });
     });
 };
 

@@ -14,7 +14,6 @@ export default function RegistrationForm() {
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
-    // Build user object without the file itself
     const userPayload = {
       fullname: data.fullname,
       email: data.email,

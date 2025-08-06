@@ -37,10 +37,13 @@ module.exports.getUserCount = async (req, res) => {
 };
 
 module.exports.registerUser = async (req, res) => {
-  const { username, email, password, sex, age } = req.body;
+  const { fullname, email, password, sex, age } = req.body;
   // validate the input
-  if (!username || !email || !password || !sex || !age) {
-    return res.status(400).send({ message: "All fields are required!" });
+  if (!fullname || !email || !password || !sex || !age) {
+    return res.status(400).send({
+      message: "All fields are required!",
+      fields: "name,email,password,sex,age",
+    });
   }
   if (password.length < 6) {
     return res
@@ -80,7 +83,7 @@ module.exports.registerUser = async (req, res) => {
     return res.status(400).send({ message: "Email already exists!" });
   }
   const newUser = new User({
-    name: username,
+    fullname: fullname,
     email: email,
     sex: sex,
     age: age,
@@ -94,7 +97,7 @@ module.exports.registerUser = async (req, res) => {
       res.cookie("token", token, { httpOnly: true, maxAge: maxAge * 1000 });
       res.status(201).send({
         id: result._id,
-        name: result.name,
+        fullname: result.fullname,
         email: result.email,
         token,
       });
@@ -139,7 +142,7 @@ module.exports.login = async (req, res) => {
     // res.status(200).send({ id: user.id, email: user.email, token });
     res.status(200).send({
       id: user._id,
-      name: user.name,
+      fullname: user.fullname,
       email: user.email,
       isAdmin: user.isAdmin,
       token,
@@ -219,10 +222,10 @@ module.exports.updateUser = async (req, res) => {
     return res.status(400).send({ message: "Invalid User ID" });
   }
 
-  const { name, email, sex, age, profilePicture } = req.body;
+  const { fullname, email, sex, age, profilePicture } = req.body;
 
   await User.findByIdAndUpdate(req.params.id, {
-    name,
+    fullname,
     email,
     sex,
     age,

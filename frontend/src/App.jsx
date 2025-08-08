@@ -8,6 +8,9 @@ import Registration from "./pages/register";
 import Unauthorized from "./pages/unauthorized";
 import NotFound from "./pages/not-found";
 import Home from "./pages/Home";
+import ReachEditor from "./components/ReachEditor";
+import Editor2 from "./components/Editor2";
+import SocketComponent from "./components/SocketComponent";
 
 function App() {
   return (
@@ -23,6 +26,8 @@ function App() {
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Registration />} />
+        {/* <Route path="/test" element={<Editor2 />} /> */}
+        <Route path="/test" element={<SocketComponent />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
       </Route>
 

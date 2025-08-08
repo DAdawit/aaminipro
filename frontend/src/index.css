@@ -118,3 +118,33 @@
     @apply bg-background text-foreground;
   }
 }
+
+@font-face {
+  font-family: "AbyssinicaSIL";
+  src: url("./assets/fonts/AbyssinicaSIL.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "jiret";
+  src: url("./assets/fonts/jiret.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "washrab";
+  src: url("./assets/fonts/washrab.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Add to App.css */
+.ql-font-AbyssinicaSIL {
+  font-family: "AbyssinicaSIL", Arial, sans-serif;
+}
+.ql-font-jiret {
+  font-family: "jiret", Arial, sans-serif;
+}
+.ql-font-washrab {
+  font-family: "washrab", Arial, sans-serif;
+}

@@ -1,52 +1,57 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { io } from "socket.io-client";
 
 // Use useRef to avoid multiple connections
-const socketRef = io("http://localhost:4000");
+const socket = io.connect("http://localhost:4000");
 
 export default function SocketComponent() {
   const [message, setMessage] = useState("");
-  const [chat, setChat] = useState([]);
-
-  useEffect(() => {
-    socketRef.on("receive_message", (data) => {
-      console.log("Message received from server:", data);
-      setChat((prevChat) => [...prevChat, data]);
-    });
-
-    return () => {
-      socketRef.off("receive_message");
-    };
-  }, []);
+  const [messages, setMessages] = useState([]); // Array to store chat messages
+  const [userId, setUserId] = useState(12);
 
   const sendMessage = (e) => {
     e.preventDefault();
     if (!message.trim()) return;
-    socketRef.emit("send_message", {
+    const myMessage = {
       text: message,
-      sender: socketRef.id || "anonymous",
-    });
+      sender: socket.id || "Me",
+    };
+    socket.emit("send_message", myMessage);
+    setMessages((prev) => [...prev, myMessage]); // Add your own message to the list
     setMessage("");
   };
+
+  useEffect(() => {
+    socket.on("received_message", (data) => {
+      setMessages((prev) => [...prev, data]); // Push new message to array
+    });
+
+    // Optional: clean up listener on unmount
+    socket.emit("join_room", userId);
+    return () => {
+      socket.off("received_message");
+    };
+  }, [userId]);
 
   return (
     <div style={{ padding: "2rem" }}>
       <h1>Socket.IO Chat</h1>
+
       <div
         style={{
+          marginBottom: "1rem",
           border: "1px solid #ccc",
           padding: "1rem",
-          height: "300px",
-          overflowY: "auto",
-          marginBottom: "1rem",
+          minHeight: "100px",
         }}
       >
-        {chat.map((msg, index) => (
-          <p key={index}>
+        {messages.map((msg, idx) => (
+          <div key={idx}>
             <strong>{msg.sender}:</strong> {msg.text}
-          </p>
+          </div>
         ))}
       </div>
+
       <form onSubmit={sendMessage}>
         <input
           type="text"

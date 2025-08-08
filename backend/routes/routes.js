@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/user.controller");
+const groupPermissionController = require("../controllers/groupPermission.controller");
 const fileUploader = require("../utils/fileUploader");
 const formidable = require("formidable");
 const fs = require("fs");
@@ -21,11 +22,19 @@ router.post("/users", userController.registerUser);
 router.post("/login", userController.login);
 router.get("/logout", userController.logout);
 router.get("/verifyToken", userController.verifyToken);
-// permission routes
-router.post("/permission/register", PermissionController.registerPermission);
 router.delete("/users/:id", userController.deleteUser);
 router.put("/users/:id", userController.updateUser);
+
 router.put("/users/updateProfile/:id", userController.updateProfilePicture);
+// router.post("/users/addPermission/", userController.addPermissionToUser);
+router.get("/test", groupPermissionController.groupPermissions);
+
+// permission routes
+router.post("/permission/register", PermissionController.registerPermission);
+router.post(
+  "/permission/groupPermissions",
+  groupPermissionController.groupPermissions
+);
 // genrate it
 router.post("/generate-pdf", async (req, res) => {
   try {
@@ -382,5 +391,3 @@ router.post("/upload-file", function async(req, res) {
 });
 
 module.exports = router;
-
-

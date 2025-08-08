@@ -1,22 +1,39 @@
 const Permission = require("../models/permission.model");
 const checkContent = require("../utils/check-strings");
+const mongoose = require("mongoose");
+
 const registerPermission = async (req, res) => {
   try {
-    const { name, codeName, description } = req.body;
-    if (!name || !codeName) {
+    const { name, codeName, description, createdBy } = req.body;
+    if (!name) {
       return res.status(400).json({
-        message: "Name and codeName are required",
+        message: "Name is required",
         status: "fail",
       });
     }
-    const fields = [name, codeName, description];
-    // send array fields
-    const isValid = checkContent(fields);
-    if (!isValid) {
+    if (!codeName) {
       return res.status(400).json({
-        message: "The content is not valid.",
+        message: "CodeName is required",
         status: "fail",
       });
+    }
+    if (!description) {
+      return res.status(400).json({
+        message: "description is required",
+        status: "fail",
+      });
+    }
+    // send array fields
+    // const isValid = checkContent(fields);
+    // if (!isValid) {
+    //   return res.status(400).json({
+    //     message: "The content is not valid.",
+    //     status: "fail",
+    //   });
+    // }
+    // isValidObjectId(req.params.id) is a mongoose method to check if the id is valid
+    if (!mongoose.Types.ObjectId.isValid(createdBy)) {
+      return res.status(400).send({ message: "Invalid User ID" });
     }
     // remove spaces
     const trimmedcodeName = codeName.trim();
@@ -28,10 +45,12 @@ const registerPermission = async (req, res) => {
         status: "fail",
       });
     }
+
     const newPermission = await Permission.create({
       name: name,
       codeName: trimmedcodeName,
       description: description || "",
+      createdBy: createdBy,
     });
 
     res.status(201).json({
@@ -149,9 +168,49 @@ const deletePermission = async (req, res) => {
   }
 };
 
+const addPermissionToUser = async (req, res) => {
+  return res.sen("hello");
+  const { userId, permissionId } = req.body;
+  try {
+    if (!userId || !permissionId) {
+      return res.status(400).json({
+        message: "User ID and Permission ID are required.",
+        status: "fail",
+      });
+    }
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found.",
+        status: "fail",
+      });
+    }
+    const permission = await Permission.findById(permissionId);
+    if (!permission) {
+      return res.status(404).json({
+        message: "Permission not found.",
+        status: "fail",
+      });
+    }
+    user.extraPermissions.push(permission._id);
+    await user.save();
+    res.status(200).json({
+      message: "Permission added to user successfully.",
+      status: "success",
+      user,
+    });
+  } catch (error) {
+    console.error("Add permission to user error:", error);
+    res.status(500).json({
+      message: "Server error while adding permission to user.",
+      status: "error",
+    });
+  }
+};
+
 module.exports = {
   registerPermission,
   deletePermission,
   updatePermission,
+  addPermissionToUser,
 };
-

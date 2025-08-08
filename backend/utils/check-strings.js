@@ -1,18 +1,18 @@
 const isSafeString = (input) => {
-    const scriptPattern = /<script.*?>.*?<\/script>/gi;
-    const jsPattern = /javascript:/gi;
+  const scriptPattern = /<script.*?>.*?<\/script>/gi;
+  const jsPattern = /javascript:/gi;
 
-    return !(scriptPattern.test(input) || jsPattern.test(input));
+  return !(scriptPattern.test(input) || jsPattern.test(input));
 };
 
 const checkContent = (fields) => {
-    let isValid = false
-    for (const field of fields) {
-        if (!isSafeString(field)) {
-            isValid = false
-        }
+  let isValid = false;
+  for (const field of fields) {
+    if (isSafeString(field)) {
+      isValid = true;
     }
-    return isValid
-}
+  }
+  return isValid;
+};
 
-module.exports = checkContent
+module.exports = checkContent;

@@ -2,13 +2,11 @@ import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./routes/protected-route";
 import RootLayout from "./layouts/main-layout";
 import AuthLayout from "./layouts/auth-layout";
-
 import Login from "./pages/login";
 import Registration from "./pages/register";
 import Unauthorized from "./pages/unauthorized";
 import NotFound from "./pages/not-found";
 import Home from "./pages/Home";
-<<<<<<< HEAD
 import ReachEditor from "./components/ReachEditor";
 import Editor2 from "./components/Editor2";
 import SocketComponent from "./components/SocketComponent";

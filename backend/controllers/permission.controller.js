@@ -4,7 +4,7 @@ const checkContent = require("../utils/check-strings");
 const User = require("../models/Users.model");
 const registerPermission = async (req, res) => {
     console.log(req.body);
-    return res.send("hello")
+    return res.send("hello",req.body)
 
     try {
         const { name, codeName, description } = req.body;
@@ -84,7 +84,7 @@ const updatePermission = async (req, res) => {
         if (!permissionId || !mongoose.isValidObjectId(permissionId)) {
             return res.status(400).json({
                 message: 'Permission ID is required.',
-                status: 'fail'
+                status: 'fail' 
             });
         }
 

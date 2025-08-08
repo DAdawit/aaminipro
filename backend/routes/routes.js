@@ -23,6 +23,10 @@ router.get("/logout", userController.logout);
 router.get("/verifyToken", userController.verifyToken);
 // permission routes
 router.post("/permission/register", PermissionController.registerPermission);
+router.put("/permission/update/:permissionId", PermissionController.updatePermission);
+router.get("/permission", PermissionController.getAllPermission);
+router.get("/permission/:permissionId", PermissionController.getPermissionById);
+router.delete("/permission/delete/:permissionId", PermissionController.deletePermission);
 router.delete("/users/:id", userController.deleteUser);
 router.put("/users/:id", userController.updateUser);
 router.put("/users/updateProfile/:id", userController.updateProfilePicture);

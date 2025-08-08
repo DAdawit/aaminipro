@@ -1,157 +1,218 @@
+const { default: mongoose } = require("mongoose");
 const Permission = require("../models/permission.model");
 const checkContent = require("../utils/check-strings");
 const registerPermission = async (req, res) => {
-  try {
-    const { name, codeName, description } = req.body;
-    if (!name || !codeName) {
-      return res.status(400).json({
-        message: "Name and codeName are required",
-        status: "fail",
-      });
-    }
-    const fields = [name, codeName, description];
-    // send array fields
-    const isValid = checkContent(fields);
-    if (!isValid) {
-      return res.status(400).json({
-        message: "The content is not valid.",
-        status: "fail",
-      });
-    }
-    // remove spaces
-    const trimmedcodeName = codeName.trim();
+    try {
+        const { name, codeName, description } = req.body;
+        if (!name) {
+            return res.status(400).json({
+                message: "Name are required",
+                status: "fail",
+            });
+        }
+        if (!codeName) {
+            return res.status(400).json({
+                message: "codeName are required",
+                status: "fail",
+            });
+        }
+        if (name) {
+            const ispresent = await Permission.findOne({ name })
+            if (ispresent) {
+                return res.status(409).json({
+                    message: "The Name already exist",
+                    status: "fail",
+                });
+            }
+        }
+        if (codeName) {
+            const ispresent = await Permission.findOne({ codeName })
+            if (ispresent) {
+                return res.status(409).json({
+                    message: "The codeName already exist",
+                    status: "fail",
+                });
+            }
+        }
+        const fields = [name, codeName, description];
+        // send array fields
+        const isValid = checkContent(fields);
+        if (!isValid) {
+            return res.status(400).json({
+                message: "The content is not valid.",
+                status: "fail",
+            });
+        }
+        // remove spaces
+        const trimmedcodeName = codeName.trim();
+        const newPermission = await Permission.create({
+            name: name,
+            codeName: trimmedcodeName,
+            description: description,
+        });
 
-    const isExist = await Permission.findOne({ codeName: trimmedcodeName });
-    if (isExist) {
-      return res.status(409).json({
-        message: "Permission with this codeName already exists",
-        status: "fail",
-      });
+        res.status(201).json({
+            message: "Permission registered successfully",
+            permission: newPermission,
+            status: "success",
+        });
+    } catch (error) {
+        console.error("Register permission error:", error);
+        res.status(500).json({
+            message: "Server error while creating permission",
+            status: "error",
+        });
     }
-    const newPermission = await Permission.create({
-      name: name,
-      codeName: trimmedcodeName,
-      description: description || "",
-    });
-
-    res.status(201).json({
-      message: "Permission registered successfully",
-      permission: newPermission,
-      status: "success",
-    });
-  } catch (error) {
-    console.error("Register permission error:", error);
-    res.status(500).json({
-      message: "Server error while creating permission",
-      status: "error",
-    });
-  }
+};
+const getAllPermission = async (req, res) => {
+    try {
+        const permissions = await Permission.find()
+        res.status(201).json({
+            permissions: permissions ? permissions : [],
+            status: "success",
+        });
+    } catch (error) {
+        console.error("Register permission error:", error);
+        res.status(500).json({
+            message: "Server error while creating permission",
+            status: "error",
+        });
+    }
+};
+const getPermissionById = async (req, res) => {
+    const { permissionId } = req.params
+    try {
+        if (!permissionId || !mongoose.isValidObjectId(permissionId)) {
+            return res.status(400).json({
+                message: 'The permisson id is not valid',
+                status: 'fail'
+            })
+        }
+        const permission = await Permission.findById(permissionId)
+        if (!permission) {
+            return res.status(400).json({
+                message: 'The permisson is not found',
+                status: 'fail'
+            })
+        }
+        res.status(201).json({
+            permission,
+            status: "success",
+        });
+    } catch (error) {
+        console.error("Register permission error:", error);
+        res.status(500).json({
+            message: "Server error while creating permission",
+            status: "error",
+        });
+    }
 };
 // update permission
 const updatePermission = async (req, res) => {
-  try {
-    const { permissionId } = req.params;
-    const { codeName, name, description } = req.body;
-    if (!permissionId) {
-      return res.status(400).json({
-        message: "Permission ID is required.",
-        status: "fail",
-      });
-    }
-    if (!codeName && !name) {
-      return res.status(400).json({
-        message: "Both codeName and name are required.",
-        status: "fail",
-      });
-    }
-    // check contents
-    const trimmedCodeName = codeName.trim();
-    const fields = [name, trimmedCodeName, description];
-    // send array fields
-    const isValid = checkContent(fields);
-    if (!isValid) {
-      return res.status(400).json({
-        message: "The content is not valid.",
-        status: "fail",
-      });
-    }
+    try {
+        const { permissionId } = req.params;
+        if (!permissionId || !mongoose.isValidObjectId(permissionId)) {
+            return res.status(400).json({
+                message: "Permission ID is not valid.",
+                status: "fail",
+            });
+        }
+        const existingPermission = await Permission.findById(permissionId);
+        if (!existingPermission) {
+            return res.status(404).json({
+                message: "Permission not found.",
+                status: "fail",
+            });
+        }
+        const { codeName, name, description } = req.body;
+        const codeNameExists = await Permission.findOne({
+            codeName
+        });
+        if (codeNameExists) {
+            return res.status(409).json({
+                message: "code name is already exist.",
+                status: "fail",
+            });
+        }
+        const nameExists = await Permission.findOne({
+            name
+        });
+        if (nameExists) {
+            return res.status(409).json({
+                message: "name is already exist.",
+                status: "fail",
+            });
+        }
+        // check contents
+        const trimmedCodeName = codeName.trim();
+        const fields = [name, trimmedCodeName, description];
+        // send array fields
+        const isValid = checkContent(fields);
+        if (!isValid) {
+            return res.status(400).json({
+                message: "The content is not valid.",
+                status: "fail",
+            });
+        }
+        const updatedPermission = await Permission.findByIdAndUpdate(
+            permissionId,
+            {
+                codeName: codeName ? trimmedCodeName : existingPermission.codeName,
+                name: name ? name : existingPermission.name,
+                description: description ? description : existingPermission.description,
+            },
+            { new: true }
+        );
 
-    const existingPermission = await Permission.findById(permissionId);
-    if (!existingPermission) {
-      return res.status(404).json({
-        message: "Permission not found.",
-        status: "fail",
-      });
+        return res.status(200).json({
+            message: "Permission updated successfully.",
+            status: "success",
+            permission: updatedPermission,
+        });
+    } catch (error) {
+        console.error("Update permission error:", error);
+        return res.status(500).json({
+            message: "Server error while updating permission.",
+            status: "error",
+        });
     }
-    const codeExists = await Permission.findOne({
-      code: trimmedCodeName,
-      _id: { $ne: permissionId },
-    });
-    if (codeExists) {
-      return res.status(409).json({
-        message: "Another permission with the same codeName already exists.",
-        status: "fail",
-      });
-    }
-
-    // ✅ Perform update
-    const updatedPermission = await Permission.findByIdAndUpdate(
-      permissionId,
-      {
-        code: trimmedCodeName,
-        name: trimmedName,
-        description: trimmedDescription,
-      },
-      { new: true } // return the updated document
-    );
-
-    return res.status(200).json({
-      message: "Permission updated successfully.",
-      status: "success",
-      permission: updatedPermission,
-    });
-  } catch (error) {
-    console.error("Update permission error:", error);
-    return res.status(500).json({
-      message: "Server error while updating permission.",
-      status: "error",
-    });
-  }
 };
 const deletePermission = async (req, res) => {
-  const { permissionId } = req.params;
-  try {
-    if (!permissionId) {
-      return res.status(400).json({
-        message: "PermissionId is required.",
-        status: "fail",
-      });
-    }
-    const isExist = await Permission.findById(permissionId);
-    if (!isExist) {
-      return res.status(409).json({
-        message: "Permission with this code is not exist ",
-        status: "fail",
-      });
-    }
-    await Permission.findByIdAndDelete(permissionId);
+    const { permissionId } = req.params;
+    try {
+        if (!permissionId || !mongoose.isValidObjectId(permissionId)) {
+            return res.status(400).json({
+                message: "PermissionId is not valid.",
+                status: "fail",
+            });
+        }
+        const isExist = await Permission.findById(permissionId);
+        if (!isExist) {
+            return res.status(409).json({
+                message: "Permission with this code is not exist ",
+                status: "fail",
+            });
+        }
+        await Permission.findByIdAndDelete(permissionId);
 
-    res.status(203).json({
-      message: "Permission Deleted successfully",
-      status: "success",
-    });
-  } catch (error) {
-    console.error("Register permission error:", error);
-    res.status(500).json({
-      message: "Server error while creating permission",
-      status: "error",
-    });
-  }
+        res.status(204).json({
+            message: "Permission Deleted successfully",
+            status: "success",
+        });
+    } catch (error) {
+        console.error("Register permission error:", error);
+        res.status(500).json({
+            message: "Server error while creating permission",
+            status: "error",
+        });
+    }
 };
 
 module.exports = {
-  registerPermission,
-  deletePermission,
-  updatePermission,
+    registerPermission,
+    deletePermission,
+    updatePermission,
+    getPermissionById,
+    getAllPermission
 };
 

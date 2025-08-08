@@ -8,8 +8,8 @@ const isSafeString = (input) => {
 const checkContent = (fields) => {
     let isValid = false
     for (const field of fields) {
-        if (!isSafeString(field)) {
-            isValid = false
+        if (isSafeString(field)) {
+            isValid = true
         }
     }
     return isValid

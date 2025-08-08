@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
-const { authJwt } = require("./authMiddleware/jwt");
+const { authJwt } = require("./middlewares/jwt");
 const cors = require("cors");
 const { Server } = require("socket.io");
 const http = require("http");
@@ -12,7 +12,7 @@ const http = require("http");
 // Middleware
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('uploads'))
+app.use(express.static("uploads"));
 app.use(bodyParser.json());
 app.use(morgan("tiny"));
 app.use(

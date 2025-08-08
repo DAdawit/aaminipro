@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const User = require("../models/User");
+const User = require("../models/Users.model.js");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
@@ -344,3 +344,13 @@ module.exports.updateProfilePicture = async (req, res) => {
     });
   });
 };
+
+function ensureUploadDir(uploadDir) {
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  }
+}
+
+// Usage in your code
+const uploadDir = path.join(__dirname, "..", "uploads/userPprofile");
+ensureUploadDir(uploadDir);

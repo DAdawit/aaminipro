@@ -51,7 +51,7 @@ module.exports.registerUser = async (req, res) => {
     let file = null;
     let oldPath = "";
     let newPath = "";
-    if (files.profilePicture || files.profilePicture[0]) {
+    if (files.profilePicture[0]) {
       file = files.profilePicture[0];
       oldPath = file.filepath;
       let timestamp = Date.now();
@@ -70,7 +70,7 @@ module.exports.registerUser = async (req, res) => {
           return res.status(500).send("File save error");
         } else {
           // console.log(fields);
-          const { fullname, email, password, sex, age } = fields;
+          const { fullname, email, password, sex, age, createdBy } = fields;
 
           if (!fullname || !email || !password || !sex || !age) {
             return res.status(400).send({
@@ -106,8 +106,16 @@ module.exports.registerUser = async (req, res) => {
             });
           }
 
+          if (!createdBy) {
+            return res.status(400).send({ message: "createdBy is required" });
+          }
+          // isValidObjectId(req.params.id) is a mongoose method to check if the id is valid
+          if (!mongoose.Types.ObjectId.isValid(createdBy[0])) {
+            return res.status(400).send({ message: "Invalid User ID" });
+          }
+
           // validate age
-          console.log("age", age[0]);
+          // console.log("age", age[0]);
           if (
             // typeof age[0] !== "number" ||
             parseInt(age[0]) < 10 ||
@@ -127,6 +135,7 @@ module.exports.registerUser = async (req, res) => {
             age: age[0],
             profilePicture: imagePath,
             password: bcrypt.hashSync(password[0], 8),
+            createdBy: createdBy[0],
           });
           await newUser
             .save()

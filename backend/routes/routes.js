@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const userController = require("../controllers/userController");
+const userController = require("../controllers/user.controller");
 const fileUploader = require("../utils/fileUploader");
 const formidable = require("formidable");
 const fs = require("fs");
 const path = require("path");
 const puppeteer = require("puppeteer");
-const { registerPermission } = require("../controllers/permission.controller");
+// const { registerPermission } = require("../controllers/permission.controller");
+const PermissionController = require("../controllers/permission.controller");
 router.get("/", (req, res) => {
   res.send({
     message: "wellcome",
@@ -21,7 +22,7 @@ router.post("/login", userController.login);
 router.get("/logout", userController.logout);
 router.get("/verifyToken", userController.verifyToken);
 // permission routes
-router.post("/permission/register", registerPermission);
+router.post("/permission/register", PermissionController.registerPermission);
 router.delete("/users/:id", userController.deleteUser);
 router.put("/users/:id", userController.updateUser);
 router.put("/users/updateProfile/:id", userController.updateProfilePicture);

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const GroupPermission = require("../models/group-permissions.model.js");
+const Permission = require("../models/permission.model");
 
 const groupPermissions = async (req, res) => {
   // return res.send("hello");
@@ -20,19 +21,28 @@ const groupPermissions = async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(createdBy)) {
     return res.status(400).json({ message: "Invalid User ID" });
   }
+  let validPermissions = [];
   for (const permissionId of permissions) {
     if (!mongoose.Types.ObjectId.isValid(permissionId)) {
       return res
         .status(400)
         .json({ message: `Invalid Permission ID: ${permissionId}` });
     }
+
+    let permission = await Permission.findOne({ _id: permissionId });
+    if (!permission) {
+      return res
+        .status(400)
+        .json({ message: `Permission not found: ${permissionId}` });
+    }
+    validPermissions.push(permission);
   }
 
   // Create group
   try {
     const group = new GroupPermission({
       name,
-      permissions,
+      validPermissions,
       createdBy,
     });
     await group.save();
@@ -50,6 +60,20 @@ const groupPermissions = async (req, res) => {
   }
 };
 
+const getGroupPermissions = async (req, res) => {
+  try {
+    const groupPermissions = await GroupPermission.find();
+    return res.status(200).send(groupPermissions);
+  } catch (error) {
+    return res.status(500).json({
+      message: "Error retrieving group permissions",
+      status: "error",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   groupPermissions,
+  getGroupPermissions,
 };

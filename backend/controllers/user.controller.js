@@ -26,9 +26,60 @@ function createToken(id) {
   return token;
 }
 
-module.exports.index = async (req, res) => {
-  const users = await User.find({}).select("-password");
-  res.status(200).send(users);
+module.exports.getUsers = async (req, res) => {
+  try {
+    const users = await User.find({})
+      .select("-password")
+      .populate({
+        path: "groupPermissions",
+        populate: {
+          path: "permissions",
+          model: "Permission",
+        },
+      })
+      .populate("extraPermissions")
+      .populate("restrictedPermissions")
+      .populate({
+        path: "createdBy",
+        select: "_id fullname email isSuperAdmin role", // Only these fields
+      });
+    res.status(200).send(users);
+  } catch (error) {
+    res.status(500).send({ message: "Internal server error" });
+  }
+};
+
+module.exports.getUser = async (req, res) => {
+  // check the id is valid
+  if (!req.params.id) {
+    return res.status(400).send({ message: "User ID is required" });
+  }
+  // isValidObjectId(req.params.id) is a mongoose method to check if the id is valid
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).send({ message: "Invalid User ID" });
+  }
+  await User.findById(req.params.id)
+    .select("-password")
+    .populate({
+      path: "groupPermissions",
+      populate: {
+        path: "permissions",
+        model: "Permission",
+      },
+    })
+    .populate("extraPermissions")
+    .populate("restrictedPermissions")
+    .populate({
+      path: "createdBy",
+      select: "_id fullname email isSuperAdmin role", // Only these fields
+    })
+    .then((user) => {
+      res.status(200).send(user);
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.status(400).send(err);
+    });
 };
 
 module.exports.getUserCount = async (req, res) => {
@@ -160,26 +211,6 @@ module.exports.registerUser = async (req, res) => {
     });
   });
   return 0;
-};
-
-module.exports.getUser = async (req, res) => {
-  // check the id is valid
-  if (!req.params.id) {
-    return res.status(400).send({ message: "User ID is required" });
-  }
-  // isValidObjectId(req.params.id) is a mongoose method to check if the id is valid
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-    return res.status(400).send({ message: "Invalid User ID" });
-  }
-  await User.findById(req.params.id)
-    .select("-password")
-    .then((user) => {
-      res.status(200).send(user);
-    })
-    .catch((err) => {
-      console.log(err);
-      return res.status(400).send(err);
-    });
 };
 
 module.exports.login = async (req, res) => {

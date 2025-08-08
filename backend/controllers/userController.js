@@ -8,7 +8,7 @@ const fs = require("fs");
 const path = require("path");
 const maxAge = 3 * 24 * 60 * 60;
 function createToken(id) {
-  const secrete = process.env.SECRETE;
+  const secrete = process.env.ACCESS_TOKEN_SECRET;
 
   const token = jwt.sign(
     {
@@ -221,7 +221,7 @@ module.exports.getUserId = (req) => {
     if (typeof bearerHeader !== "undefined") {
       token = bearerHeader.split(" ")[1];
     }
-    const secrete = process.env.SECRETE;
+    const secrete = process.env.ACCESS_TOKEN_SECRET;
 
     if (token) {
       jwt.verify(token, secrete, (err, decodedToken) => {

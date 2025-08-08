@@ -12,6 +12,7 @@ const http = require("http");
 // Middleware
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static('uploads'))
 app.use(bodyParser.json());
 app.use(morgan("tiny"));
 app.use(

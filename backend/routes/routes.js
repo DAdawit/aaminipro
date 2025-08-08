@@ -19,7 +19,8 @@ router.post("/users", userController.registerUser);
 router.post("/login", userController.login);
 router.get("/logout", userController.logout);
 router.get("/verifyToken", userController.verifyToken);
-
+// permission routes
+router.post('/permission/register')
 router.delete("/users/:id", userController.deleteUser);
 router.put("/users/:id", userController.updateUser);
 router.put("/users/updateProfile/:id", userController.updateProfilePicture);

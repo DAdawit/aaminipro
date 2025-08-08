@@ -1,29 +1,36 @@
 const Permission = require("../models/permission.model");
 const checkContent = require("../utils/check-strings");
-const isSafeString = require("../utils/check-strings");
-
 const registerPermission = async (req, res) => {
     try {
-        const { name, code, description } = req.body;
-        if (!name || !code) {
+        const { name, codeName, description } = req.body;
+        if (!name || !codeName) {
             return res.status(400).json({
-                message: 'Name and code are required',
+                message: 'Name and codeName are required',
                 status: "fail"
             });
         }
+        const fields = [name, codeName, description]
+        // send array fields
+        const isValid = checkContent(fields)
+        if (!isValid) {
+            return res.status(400).json({
+                message: 'The content is not valid.',
+                status: 'fail'
+            })
+        }
         // remove spaces
-        const trimmedCode = code.trim();
+        const trimmedcodeName = codeName.trim();
 
-        const isExist = await Permission.findOne({ code: trimmedCode });
+        const isExist = await Permission.findOne({ codeName: trimmedcodeName });
         if (isExist) {
             return res.status(409).json({
-                message: 'Permission with this code already exists',
+                message: 'Permission with this codeName already exists',
                 status: "fail"
             });
         }
         const newPermission = await Permission.create({
             name: name,
-            code: trimmedCode,
+            codeName: trimmedcodeName,
             description: description || ''
         });
 

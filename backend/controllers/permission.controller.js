@@ -1,7 +1,6 @@
-const { default: mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 const Permission = require("../models/permission.model");
 const checkContent = require("../utils/check-strings");
-const mongoose = require("mongoose");
 
 const registerPermission = async (req, res) => {
   try {

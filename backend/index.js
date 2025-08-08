@@ -12,10 +12,42 @@ app.use(express.static('uploads'))
 app.use(bodyParser.json());
 app.use(morgan("tiny"));
 // app.use(authJwt);
+const { Server } = require("socket.io");
+const http = require("http");
+
+const server = http.createServer(app);
 
 const cors = require("cors");
 
 app.use(express.static("public"));
+
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:5173", // React frontend
+    methods: ["GET", "POST"],
+  },
+});
+
+// When client connects
+io.on("connection", (socket) => {
+  console.log(`User connected: ${socket.id}`);
+
+  socket.on("join_room", (room) => {
+    socket.join(room);
+    console.log(`User ${socket.id} joined room: ${room}`);
+  });
+  // Listen for messages from clients
+  socket.on("send_message", (data) => {
+    console.log("Message received:", data);
+    // Broadcast message to all clients
+    io.emit("receive_message", data);
+  });
+
+  // When client disconnects
+  socket.on("disconnect", () => {
+    console.log(`User disconnected: ${socket.id}`);
+  });
+});
 
 const uri =
   "mongodb+srv://dadawit:CdawjOQlulra13am@cluster0.gbn1ssb.mongodb.net/?retryWrites=true&w=majority";
@@ -42,6 +74,7 @@ mongoose
 // });
 
 app.use(cors());
+app.use(express.json());
 
 app.use("/api", require("./routes/routes"));
 

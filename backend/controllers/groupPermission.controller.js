@@ -18,9 +18,11 @@ const groupPermissions = async (req, res) => {
   if (!createdBy) {
     return res.status(400).json({ message: "Created by is required" });
   }
+
   if (!mongoose.Types.ObjectId.isValid(createdBy)) {
     return res.status(400).json({ message: "Invalid User ID" });
   }
+
   let validPermissions = [];
   for (const permissionId of permissions) {
     if (!mongoose.Types.ObjectId.isValid(permissionId)) {

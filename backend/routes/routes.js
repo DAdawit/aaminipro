@@ -5,8 +5,8 @@ const fileUploader = require("../utils/fileUploader");
 const formidable = require("formidable");
 const fs = require("fs");
 const path = require("path");
-const puppeteer = require('puppeteer');
-const { registerPermission } = require("../../../socket-io/controllers/permission.controller");
+const puppeteer = require("puppeteer");
+const { registerPermission } = require("../controllers/permission.controller");
 router.get("/", (req, res) => {
   res.send({
     message: "wellcome",
@@ -21,12 +21,12 @@ router.post("/login", userController.login);
 router.get("/logout", userController.logout);
 router.get("/verifyToken", userController.verifyToken);
 // permission routes
-router.post('/permission/register',registerPermission)
+router.post("/permission/register", registerPermission);
 router.delete("/users/:id", userController.deleteUser);
 router.put("/users/:id", userController.updateUser);
 router.put("/users/updateProfile/:id", userController.updateProfilePicture);
-// genrate it 
-router.post('/generate-pdf', async (req, res) => {
+// genrate it
+router.post("/generate-pdf", async (req, res) => {
   try {
     const { letterName } = req.body;
 
@@ -313,36 +313,35 @@ router.post('/generate-pdf', async (req, res) => {
     `;
 
     const browser = await puppeteer.launch({
-      headless: 'new',
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-      timeout: 60000
+      headless: "new",
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      timeout: 60000,
     });
     const page = await browser.newPage();
-    await page.setContent(html, { waitUntil: 'networkidle0' });
+    await page.setContent(html, { waitUntil: "networkidle0" });
     const fileName = `${Date.now()}.pdf`;
-    const outputDir = path.join(__dirname, "..", 'uploads');
+    const outputDir = path.join(__dirname, "..", "uploads");
     const outputPath = path.join(outputDir, fileName);
 
     fs.mkdirSync(outputDir, { recursive: true });
 
     await page.pdf({
       path: outputPath,
-      format: 'A4',
+      format: "A4",
       printBackground: true,
-      margin: { top: '20mm', bottom: '20mm', left: '20mm', right: '20mm' }
+      margin: { top: "20mm", bottom: "20mm", left: "20mm", right: "20mm" },
     });
 
     await browser.close();
 
     res.json({
-      message: 'PDF generated successfully',
+      message: "PDF generated successfully",
       fileName,
-      filePath: `/uploads/${fileName}`
+      filePath: `/uploads/${fileName}`,
     });
-
   } catch (error) {
-    console.error('PDF generation error:', error);
-    res.status(500).send('Internal Server Error');
+    console.error("PDF generation error:", error);
+    res.status(500).send("Internal Server Error");
   }
 });
 router.post("/upload-file", function async(req, res) {

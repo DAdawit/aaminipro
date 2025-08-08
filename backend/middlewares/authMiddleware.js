@@ -4,7 +4,7 @@ const requireAuth = (req, res, next) => {
   const token = req.cookies.token;
 
   if (token) {
-    const secrete = process.env.secrete;
+    const secrete = process.env.ACCESS_TOKEN_SECRET;
     jwt.verify(token, secrete, async (err, decodedToken) => {
       if (err) {
         return res.status(401).send({ error: "invalid token" });

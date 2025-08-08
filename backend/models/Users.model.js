@@ -13,7 +13,7 @@ const userSchema = mongoose.Schema(
     },
     isSuperAdmin: {
       type: String,
-      default: "yes",
+      default: "no",
       enum: ["yes", "no"],
     },
     role: {
@@ -44,12 +44,11 @@ const userSchema = mongoose.Schema(
       enum: ["ACTIVE", "INACTIVE"],
       default: "ACTIVE",
     },
-    groupPermissions: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "GroupPermissions",
-      },
-    ],
+    groupPermissions: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "GroupPermissions",
+      default: null,
+    },
     extraPermissions: [
       {
         type: mongoose.Schema.Types.ObjectId,

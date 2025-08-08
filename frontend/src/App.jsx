@@ -8,6 +8,7 @@ import Registration from "./pages/register";
 import Unauthorized from "./pages/unauthorized";
 import NotFound from "./pages/not-found";
 import Home from "./pages/Home";
+import { UserTable } from "./pages/user-table";
 
 function App() {
   return (
@@ -24,6 +25,9 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Registration />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
+        {/* <Route path="/users" element={<UserTable />} />
+        <Route path="/users/:userId" element={<SingleUser />} />
+        <Route path="/users/update/:userId" element={<UpdateUsers />} /> */}
       </Route>
 
       {/* Not Found */}

@@ -9,6 +9,7 @@ import App from "./App";
 import store from "./store";
 import "./index.css";
 import { Toaster } from "react-hot-toast";
+import PdfGeneration from "./pages/pdf-generator";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -19,7 +20,7 @@ root.render(
       <Toaster />
 
       <BrowserRouter>
-        <App />
+        <PdfGeneration />
       </BrowserRouter>
     </Provider>
   </StrictMode>

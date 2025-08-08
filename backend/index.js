@@ -8,6 +8,7 @@ const { authJwt } = require("./authMiddleware/jwt");
 // const auth = require("./helper/jwt");
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static('uploads'))
 app.use(bodyParser.json());
 app.use(morgan("tiny"));
 // app.use(authJwt);

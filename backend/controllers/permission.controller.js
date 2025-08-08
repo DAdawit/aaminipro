@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const Permission = require("../models/permission.model");
 const checkContent = require("../utils/check-strings");
+const User = require("../models/Users.model");
+const GroupPermission = require("../models/group-permissions.model");
 
 const registerPermission = async (req, res) => {
   try {
@@ -220,15 +222,28 @@ const deletePermission = async (req, res) => {
   }
 };
 
-const addPermissionToUser = async (req, res) => {
-  return res.sen("hello");
-  const { userId, permissionId } = req.body;
+const addGroupPermissionToUser = async (req, res) => {
+  // return res.send("hello");
+  const { userId, groupPermissionId } = req.body;
   try {
-    if (!userId || !permissionId) {
+    if (!userId) {
       return res.status(400).json({
-        message: "User ID and Permission ID are required.",
+        message: "User ID is required.",
         status: "fail",
       });
+    }
+    if (!groupPermissionId) {
+      return res.status(400).json({
+        message: "Group Permission ID is required.",
+        status: "fail",
+      });
+    }
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).send({ message: "Invalid User ID" });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(groupPermissionId)) {
+      return res.status(400).send({ message: "Invalid Group Permission ID" });
     }
     const user = await User.findById(userId);
     if (!user) {
@@ -237,20 +252,26 @@ const addPermissionToUser = async (req, res) => {
         status: "fail",
       });
     }
-    const permission = await Permission.findById(permissionId);
-    if (!permission) {
+    const groupPermission = await GroupPermission.findById(groupPermissionId);
+    if (!groupPermission) {
       return res.status(404).json({
-        message: "Permission not found.",
+        message: "Group Permission not found.",
         status: "fail",
       });
     }
-    user.extraPermissions.push(permission._id);
-    await user.save();
-    res.status(200).json({
-      message: "Permission added to user successfully.",
-      status: "success",
-      user,
-    });
+
+    try {
+      const user = await User.findByIdAndUpdate(userId, {
+        groupPermissions: groupPermissionId,
+      });
+      if (!user) {
+        return res.status(404).send({ message: "User not found" });
+      }
+      res.status(200).send({ message: "Group permission added successfully" });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).send({ message: "Internal Server Error" });
+    }
   } catch (error) {
     console.error("Add permission to user error:", error);
     res.status(500).json({
@@ -266,4 +287,5 @@ module.exports = {
   updatePermission,
   getPermissionById,
   getAllPermission,
+  addGroupPermissionToUser,
 };

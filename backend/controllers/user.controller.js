@@ -23,7 +23,7 @@ function createToken(id) {
   return token;
 }
 
-module.exports.index = async (req, res) => {
+module.exports.getUsers = async (req, res) => {
   const users = await User.find({}).select("-password");
   res.status(200).send(users);
 };

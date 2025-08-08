@@ -15,7 +15,7 @@ router.get("/", (req, res) => {
   });
 });
 
-router.get("/users", userController.index);
+router.get("/users", userController.getUsers);
 router.get("/users/count", userController.getUserCount);
 router.get("/users/:id", userController.getUser);
 router.post("/users", userController.registerUser);
@@ -39,15 +39,25 @@ router.delete("/users/:id", userController.deleteUser);
 router.put("/users/:id", userController.updateUser);
 
 router.put("/users/updateProfile/:id", userController.updateProfilePicture);
-// router.post("/users/addPermission/", userController.addPermissionToUser);
+router.post(
+  "/users/addGroupPermission/",
+  PermissionController.addGroupPermissionToUser
+);
 router.get("/test", groupPermissionController.groupPermissions);
 
 // permission routes
 router.post("/permission/register", PermissionController.registerPermission);
+
+router.get(
+  "/permission/getGroupPermissions",
+  groupPermissionController.getGroupPermissions
+);
+
 router.post(
   "/permission/groupPermissions",
   groupPermissionController.groupPermissions
 );
+
 // genrate it
 router.post("/generate-pdf", async (req, res) => {
   try {

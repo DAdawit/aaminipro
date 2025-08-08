@@ -50,6 +50,20 @@ const groupPermissions = async (req, res) => {
   }
 };
 
+const getGroupPermissions = async (req, res) => {
+  try {
+    const groupPermissions = await GroupPermission.find();
+    return res.status(200).send(groupPermissions);
+  } catch (error) {
+    return res.status(500).json({
+      message: "Error retrieving group permissions",
+      status: "error",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   groupPermissions,
+  getGroupPermissions,
 };

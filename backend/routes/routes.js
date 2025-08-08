@@ -6,7 +6,7 @@ const formidable = require("formidable");
 const fs = require("fs");
 const path = require("path");
 const puppeteer = require('puppeteer');
-const { registerPermission } = require("../../../socket-io/controllers/permission.controller");
+const { registerPermission } = require("../controllers/permission.controller");
 router.get("/", (req, res) => {
   res.send({
     message: "wellcome",
@@ -21,7 +21,7 @@ router.post("/login", userController.login);
 router.get("/logout", userController.logout);
 router.get("/verifyToken", userController.verifyToken);
 // permission routes
-router.post('/permission/register',registerPermission)
+router.post('/permission/register', registerPermission)
 router.delete("/users/:id", userController.deleteUser);
 router.put("/users/:id", userController.updateUser);
 router.put("/users/updateProfile/:id", userController.updateProfilePicture);

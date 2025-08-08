@@ -22,12 +22,12 @@ const userSchema = new mongoose.Schema({
         enum: ['ACTIVE', 'INACTIVE'],
         default: 'ACTIVE'
     },
-    groupPermissions: [
+    groupPermissions: 
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'GroupPermissions'
         }
-    ],
+    ,
     extraPermissions: [
         {
             type: mongoose.Schema.Types.ObjectId,

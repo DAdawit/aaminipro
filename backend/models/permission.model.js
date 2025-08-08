@@ -4,12 +4,10 @@ const permissionSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    unique: true
   },
   codeName: {
     type: String,
     required: true,
-    unique: true,
     trim: true
   },
   description: {

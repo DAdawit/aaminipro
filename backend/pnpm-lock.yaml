@@ -65,6 +65,10 @@ importers:
       validator:
         specifier: ^13.15.15
         version: 13.15.15
+    devDependencies:
+      nodemon:
+        specifier: ^3.1.10
+        version: 3.1.10
 
 packages:
 
@@ -3278,6 +3282,10 @@ packages:
   h3@1.15.4:
     resolution: {integrity: sha512-z5cFQWDffyOe4vQ9xIqNfCZdV4p//vy6fBnr8Q1AWnVZ0teurKMG66rLj++TKwKPUP3u7iMUvrvKaEUiQw2QWQ==}
 
+  has-flag@3.0.0:
+    resolution: {integrity: sha512-sKJf1+ceQBr4SMkvQnBDNDtf4TXpVhVGateu0t918bl30FnbE2m4vNLX+VWe/dpjlb+HugGYzW7uQXH98HPEYw==}
+    engines: {node: '>=4'}
+
   has-flag@4.0.0:
     resolution: {integrity: sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ==}
     engines: {node: '>=8'}
@@ -3406,6 +3414,9 @@ packages:
 
   iferr@0.1.5:
     resolution: {integrity: sha512-DUNFN5j7Tln0D+TxzloUjKB+CtVu6myn0JEFak6dG18mNt9YkQ6lzGCdafwofISZ1lLF3xRHJ98VKy9ynkcFaA==}
+
+  ignore-by-default@1.0.1:
+    resolution: {integrity: sha512-Ius2VYcGNk7T90CppJqcIkS5ooHUZyIQK+ClZfMfMNFEF9VSE73Fq+906u/CWu92x4gzZMWOwfFYckPObzdEbA==}
 
   ignore@5.3.2:
     resolution: {integrity: sha512-hsBTNUqQTDwkWtcdYI2i06Y/nUBEsNEDJKjWdigLvegy8kDuJAS8uRlpkkcQpyEXL0Z/pjDy5HBmMjRCJ2gq+g==}
@@ -4328,6 +4339,11 @@ packages:
     resolution: {integrity: sha512-LN4fydt9TqhZhThkZIVQnF9cwjU3qmUH9h78Mx/K7d3VvfRqqwthLwJEUOEL0QPZ0XQmNN7be5Ggit5+4dq3Bw==}
     engines: {node: '>=0.12.0'}
 
+  nodemon@3.1.10:
+    resolution: {integrity: sha512-WDjw3pJ0/0jMFmyNDp3gvY2YizjLmmOUQo6DEBY+JgdvW/yQ9mEeSw6H5ythl5Ny2ytb7f9C2nIbjSxMNzbJXw==}
+    engines: {node: '>=10'}
+    hasBin: true
+
   nopt@8.1.0:
     resolution: {integrity: sha512-ieGu42u/Qsa4TFktmaKEwM6MQH0pOWnaB3htzh0JRtx84+Mebc0cbZYN5bC+6WTZ4+77xrL9Pn5m7CV6VIkV7A==}
     engines: {node: ^18.17.0 || >=20.5.0}
@@ -4787,6 +4803,9 @@ packages:
     resolution: {integrity: sha512-OPS9kEJYVmiO48u/B9qneqhkMvgCxT+Tm28VCEJpheTpl8cJ0ffZRRNgS5mrQRTrX5yRTpaJ+hRDeefXYmmorQ==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
+  pstree.remy@1.1.8:
+    resolution: {integrity: sha512-77DZwxQmxKnu3aR542U+X8FypNzbfJ+C5XQDk3uWjWxn6151aIMGthWYRXTqT1E5oJvg+ljaa2OJi+VfvCOQ8w==}
+
   public-encrypt@4.0.3:
     resolution: {integrity: sha512-zVpa8oKZSz5bTMTFClc1fQOnyyEzpl5ozpi1B5YcvBrdohMjH2rfsBtyXcuNuwjsDIXmBYlF2N5FlJYhR29t8Q==}
 
@@ -5207,6 +5226,10 @@ packages:
   simple-swizzle@0.2.2:
     resolution: {integrity: sha512-JA//kQgZtbuY83m+xT+tXJkmJncGMTFT+C+g2h2R9uxkYIrE2yy9sgmcLhCnw57/WSD+Eh3J97FPEDFnbXnDUg==}
 
+  simple-update-notifier@2.0.0:
+    resolution: {integrity: sha512-a2B9Y0KlNXl9u/vsW6sTIu9vGEpfKu2wRV6l1H3XEas/0gUIzGzBoP/IouTcUQbm9JWZLH3COxyn03TYlFax6w==}
+    engines: {node: '>=10'}
+
   slash@3.0.0:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
     engines: {node: '>=8'}
@@ -5429,6 +5452,10 @@ packages:
     resolution: {integrity: sha512-GBuewsPrhJPftT+fqDa9oI/zc5HNsG9nREqwzoSFDOIqf0NggOZbHQj2TE1P1CDJK8ZogFnlZY9hWoUiur7I/A==}
     engines: {node: '>=18'}
 
+  supports-color@5.5.0:
+    resolution: {integrity: sha512-QjVjwdXIt408MIiAqCX4oUKsgU2EqAGzs2Ppkm4aQYbjm+ZEWEcW4SfFNTr4uMNZma0ey4f5lgLrkB0aX0QMow==}
+    engines: {node: '>=4'}
+
   supports-color@7.2.0:
     resolution: {integrity: sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw==}
     engines: {node: '>=8'}
@@ -5550,6 +5577,10 @@ packages:
   tomlify-j0.4@3.0.0:
     resolution: {integrity: sha512-2Ulkc8T7mXJ2l0W476YC/A209PR38Nw8PuaCNtk9uI3t1zzFdGQeWYGQvmj2PZkVvRC/Yoi4xQKMRnWc/N29tQ==}
 
+  touch@3.1.1:
+    resolution: {integrity: sha512-r0eojU4bI8MnHr8c5bNo7lJDdI2qXlWWJk6a9EAFG7vbhTjElYhBVS3/miuE0uOuoLdb8Mc/rVfsmm6eo5o9GA==}
+    hasBin: true
+
   tr46@0.0.3:
     resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
 
@@ -5641,6 +5672,9 @@ packages:
 
   uncrypto@0.1.3:
     resolution: {integrity: sha512-Ql87qFHB3s/De2ClA9e0gsnS6zXG27SkTiSJwjCc9MebbfapQfuPzumMIUMi38ezPZVNFcHI9sUIepeQfw8J8Q==}
+
+  undefsafe@2.0.5:
+    resolution: {integrity: sha512-WxONCrssBM8TSPRqN5EmsjVrsv4A8X12J4ArBiiayv3DyyG3ZlIg6yysuuSYdZsVz3TKcTg2fd//Ujd4CHV1iA==}
 
   undici-types@7.10.0:
     resolution: {integrity: sha512-t5Fy/nfn+14LuOc2KNYg75vZqClpAiqscVvMygNnlsHBFpSXdJaYtXMcdNLpl/Qvc3P2cB3s6lOV51nqsFq4ag==}
@@ -6063,7 +6097,7 @@ snapshots:
       '@babel/traverse': 7.28.0
       '@babel/types': 7.28.2
       convert-source-map: 2.0.0
-      debug: 4.4.1(supports-color@10.1.0)
+      debug: 4.4.1
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.1
@@ -6115,7 +6149,7 @@ snapshots:
       '@babel/core': 7.28.0
       '@babel/helper-compilation-targets': 7.27.2
       '@babel/helper-plugin-utils': 7.27.1
-      debug: 4.4.1(supports-color@10.1.0)
+      debug: 4.4.1
       lodash.debounce: 4.0.8
       resolve: 1.22.10
     transitivePeerDependencies:
@@ -6712,7 +6746,7 @@ snapshots:
       '@babel/parser': 7.28.0
       '@babel/template': 7.27.2
       '@babel/types': 7.28.2
-      debug: 4.4.1(supports-color@10.1.0)
+      debug: 4.4.1
     transitivePeerDependencies:
       - supports-color
 
@@ -7026,6 +7060,19 @@ snapshots:
 
   '@lukeed/ms@2.0.2': {}
 
+  '@mapbox/node-pre-gyp@2.0.0':
+    dependencies:
+      consola: 3.4.2
+      detect-libc: 2.0.4
+      https-proxy-agent: 7.0.6
+      node-fetch: 2.7.0
+      nopt: 8.1.0
+      semver: 7.7.2
+      tar: 7.4.3
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+
   '@mapbox/node-pre-gyp@2.0.0(supports-color@10.1.0)':
     dependencies:
       consola: 3.4.2
@@ -7333,6 +7380,46 @@ snapshots:
 
   '@netlify/types@2.0.2': {}
 
+  '@netlify/zip-it-and-ship-it@14.1.0':
+    dependencies:
+      '@babel/parser': 7.28.0
+      '@babel/types': 7.28.1
+      '@netlify/binary-info': 1.0.0
+      '@netlify/serverless-functions-api': 2.1.3
+      '@vercel/nft': 0.29.4
+      archiver: 7.0.1
+      common-path-prefix: 3.0.0
+      copy-file: 11.0.0
+      es-module-lexer: 1.7.0
+      esbuild: 0.25.6
+      execa: 8.0.1
+      fast-glob: 3.3.3
+      filter-obj: 6.1.0
+      find-up: 7.0.0
+      is-builtin-module: 3.2.1
+      is-path-inside: 4.0.0
+      junk: 4.0.1
+      locate-path: 7.2.0
+      merge-options: 3.0.4
+      minimatch: 9.0.5
+      normalize-path: 3.0.0
+      p-map: 7.0.3
+      path-exists: 5.0.0
+      precinct: 12.2.0
+      require-package-name: 2.0.1
+      resolve: 2.0.0-next.5
+      semver: 7.7.2
+      tmp-promise: 3.0.3
+      toml: 3.0.0
+      unixify: 1.0.0
+      urlpattern-polyfill: 8.0.2
+      yargs: 17.7.2
+      zod: 3.25.76
+    transitivePeerDependencies:
+      - encoding
+      - rollup
+      - supports-color
+
   '@netlify/zip-it-and-ship-it@14.1.0(supports-color@10.1.0)':
     dependencies:
       '@babel/parser': 7.28.0
@@ -7582,7 +7669,7 @@ snapshots:
 
   '@pnpm/tabtab@0.5.4':
     dependencies:
-      debug: 4.4.1(supports-color@10.1.0)
+      debug: 4.4.1
       enquirer: 2.4.1
       minimist: 1.2.8
       untildify: 4.0.0
@@ -7591,7 +7678,7 @@ snapshots:
 
   '@puppeteer/browsers@2.10.6':
     dependencies:
-      debug: 4.4.1(supports-color@10.1.0)
+      debug: 4.4.1
       extract-zip: 2.0.1
       progress: 2.0.3
       proxy-agent: 6.5.0
@@ -7692,6 +7779,15 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@typescript-eslint/project-service@8.39.0(typescript@5.9.2)':
+    dependencies:
+      '@typescript-eslint/tsconfig-utils': 8.39.0(typescript@5.9.2)
+      '@typescript-eslint/types': 8.39.0
+      debug: 4.4.1
+      typescript: 5.9.2
+    transitivePeerDependencies:
+      - supports-color
+
   '@typescript-eslint/tsconfig-utils@8.39.0(typescript@5.9.2)':
     dependencies:
       typescript: 5.9.2
@@ -7714,10 +7810,45 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@typescript-eslint/typescript-estree@8.39.0(typescript@5.9.2)':
+    dependencies:
+      '@typescript-eslint/project-service': 8.39.0(typescript@5.9.2)
+      '@typescript-eslint/tsconfig-utils': 8.39.0(typescript@5.9.2)
+      '@typescript-eslint/types': 8.39.0
+      '@typescript-eslint/visitor-keys': 8.39.0
+      debug: 4.4.1
+      fast-glob: 3.3.3
+      is-glob: 4.0.3
+      minimatch: 9.0.5
+      semver: 7.7.2
+      ts-api-utils: 2.1.0(typescript@5.9.2)
+      typescript: 5.9.2
+    transitivePeerDependencies:
+      - supports-color
+
   '@typescript-eslint/visitor-keys@8.39.0':
     dependencies:
       '@typescript-eslint/types': 8.39.0
       eslint-visitor-keys: 4.2.1
+
+  '@vercel/nft@0.29.4':
+    dependencies:
+      '@mapbox/node-pre-gyp': 2.0.0
+      '@rollup/pluginutils': 5.2.0
+      acorn: 8.15.0
+      acorn-import-attributes: 1.9.5(acorn@8.15.0)
+      async-sema: 3.1.1
+      bindings: 1.5.0
+      estree-walker: 2.0.2
+      glob: 10.4.5
+      graceful-fs: 4.2.11
+      node-gyp-build: 4.8.4
+      picomatch: 4.0.3
+      resolve-from: 5.0.0
+    transitivePeerDependencies:
+      - encoding
+      - rollup
+      - supports-color
 
   '@vercel/nft@0.29.4(supports-color@10.1.0)':
     dependencies:
@@ -8274,8 +8405,7 @@ snapshots:
   binary-extensions@1.13.1:
     optional: true
 
-  binary-extensions@2.3.0:
-    optional: true
+  binary-extensions@2.3.0: {}
 
   bindings@1.5.0:
     dependencies:
@@ -8314,7 +8444,7 @@ snapshots:
     dependencies:
       bytes: 3.1.2
       content-type: 1.0.5
-      debug: 4.4.1(supports-color@10.1.0)
+      debug: 4.4.1
       http-errors: 2.0.0
       iconv-lite: 0.6.3
       on-finished: 2.4.1
@@ -8569,7 +8699,6 @@ snapshots:
       readdirp: 3.6.0
     optionalDependencies:
       fsevents: 2.3.3
-    optional: true
 
   chokidar@4.0.3:
     dependencies:
@@ -8931,11 +9060,21 @@ snapshots:
     dependencies:
       ms: 2.1.3
 
+  debug@4.4.1:
+    dependencies:
+      ms: 2.1.3
+
   debug@4.4.1(supports-color@10.1.0):
     dependencies:
       ms: 2.1.3
     optionalDependencies:
       supports-color: 10.1.0
+
+  debug@4.4.1(supports-color@5.5.0):
+    dependencies:
+      ms: 2.1.3
+    optionalDependencies:
+      supports-color: 5.5.0
 
   decache@4.6.2:
     dependencies:
@@ -9059,6 +9198,15 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  detective-typescript@14.0.0(typescript@5.9.2):
+    dependencies:
+      '@typescript-eslint/typescript-estree': 8.39.0(typescript@5.9.2)
+      ast-module-types: 6.0.1
+      node-source-walk: 7.0.1
+      typescript: 5.9.2
+    transitivePeerDependencies:
+      - supports-color
+
   detective-vue2@2.2.0(supports-color@10.1.0)(typescript@5.9.2):
     dependencies:
       '@dependents/detective-less': 5.0.1
@@ -9068,6 +9216,19 @@ snapshots:
       detective-scss: 5.0.1
       detective-stylus: 5.0.1
       detective-typescript: 14.0.0(supports-color@10.1.0)(typescript@5.9.2)
+      typescript: 5.9.2
+    transitivePeerDependencies:
+      - supports-color
+
+  detective-vue2@2.2.0(typescript@5.9.2):
+    dependencies:
+      '@dependents/detective-less': 5.0.1
+      '@vue/compiler-sfc': 3.5.18
+      detective-es6: 5.0.1
+      detective-sass: 6.0.1
+      detective-scss: 5.0.1
+      detective-stylus: 5.0.1
+      detective-typescript: 14.0.0(typescript@5.9.2)
       typescript: 5.9.2
     transitivePeerDependencies:
       - supports-color
@@ -9406,7 +9567,7 @@ snapshots:
       content-type: 1.0.5
       cookie: 0.7.2
       cookie-signature: 1.2.2
-      debug: 4.4.1(supports-color@10.1.0)
+      debug: 4.4.1
       encodeurl: 2.0.0
       escape-html: 1.0.3
       etag: 1.8.1
@@ -9469,7 +9630,7 @@ snapshots:
 
   extract-zip@2.0.1:
     dependencies:
-      debug: 4.4.1(supports-color@10.1.0)
+      debug: 4.4.1
       get-stream: 5.2.0
       yauzl: 2.10.0
     optionalDependencies:
@@ -9616,7 +9777,7 @@ snapshots:
 
   finalhandler@2.1.0:
     dependencies:
-      debug: 4.4.1(supports-color@10.1.0)
+      debug: 4.4.1
       encodeurl: 2.0.0
       escape-html: 1.0.3
       on-finished: 2.4.1
@@ -9678,7 +9839,7 @@ snapshots:
 
   follow-redirects@1.15.11(debug@4.4.1):
     optionalDependencies:
-      debug: 4.4.1(supports-color@10.1.0)
+      debug: 4.4.1
 
   for-each@0.3.5:
     dependencies:
@@ -9794,7 +9955,7 @@ snapshots:
     dependencies:
       basic-ftp: 5.0.5
       data-uri-to-buffer: 6.0.2
-      debug: 4.4.1(supports-color@10.1.0)
+      debug: 4.4.1
     transitivePeerDependencies:
       - supports-color
 
@@ -9898,6 +10059,8 @@ snapshots:
       ufo: 1.6.1
       uncrypto: 0.1.3
 
+  has-flag@3.0.0: {}
+
   has-flag@4.0.0: {}
 
   has-own-prop@2.0.0: {}
@@ -9988,7 +10151,7 @@ snapshots:
   http-proxy-agent@7.0.2:
     dependencies:
       agent-base: 7.1.4
-      debug: 4.4.1(supports-color@10.1.0)
+      debug: 4.4.1
     transitivePeerDependencies:
       - supports-color
 
@@ -10019,6 +10182,13 @@ snapshots:
 
   https-browserify@1.0.0: {}
 
+  https-proxy-agent@7.0.6:
+    dependencies:
+      agent-base: 7.1.4
+      debug: 4.4.1
+    transitivePeerDependencies:
+      - supports-color
+
   https-proxy-agent@7.0.6(supports-color@10.1.0):
     dependencies:
       agent-base: 7.1.4
@@ -10041,6 +10211,8 @@ snapshots:
   ieee754@1.2.1: {}
 
   iferr@0.1.5: {}
+
+  ignore-by-default@1.0.1: {}
 
   ignore@5.3.2: {}
 
@@ -10170,7 +10342,6 @@ snapshots:
   is-binary-path@2.1.0:
     dependencies:
       binary-extensions: 2.3.0
-    optional: true
 
   is-buffer@1.1.6: {}
 
@@ -10819,7 +10990,7 @@ snapshots:
 
   mquery@5.0.0:
     dependencies:
-      debug: 4.4.1(supports-color@10.1.0)
+      debug: 4.4.1
     transitivePeerDependencies:
       - supports-color
 
@@ -10890,7 +11061,7 @@ snapshots:
       '@netlify/headers-parser': 9.0.1
       '@netlify/local-functions-proxy': 2.0.3
       '@netlify/redirect-parser': 15.0.2
-      '@netlify/zip-it-and-ship-it': 14.1.0(supports-color@10.1.0)
+      '@netlify/zip-it-and-ship-it': 14.1.0
       '@octokit/rest': 21.1.1
       '@opentelemetry/api': 1.8.0
       '@pnpm/tabtab': 0.5.4
@@ -10908,7 +11079,7 @@ snapshots:
       content-type: 1.0.5
       cookie: 1.0.2
       cron-parser: 4.9.0
-      debug: 4.4.1(supports-color@10.1.0)
+      debug: 4.4.1
       decache: 4.6.2
       dot-prop: 9.0.0
       dotenv: 16.6.1
@@ -10930,7 +11101,7 @@ snapshots:
       gitconfiglocal: 2.1.0
       http-proxy: 1.18.1(debug@4.4.1)
       http-proxy-middleware: 2.0.9(debug@4.4.1)
-      https-proxy-agent: 7.0.6(supports-color@10.1.0)
+      https-proxy-agent: 7.0.6
       inquirer: 8.2.6
       inquirer-autocomplete-prompt: 1.4.0(inquirer@8.2.6)
       ipx: 3.1.1(@netlify/blobs@10.0.7)
@@ -11086,6 +11257,19 @@ snapshots:
       '@babel/parser': 7.28.0
 
   node-stream-zip@1.15.0: {}
+
+  nodemon@3.1.10:
+    dependencies:
+      chokidar: 3.6.0
+      debug: 4.4.1(supports-color@5.5.0)
+      ignore-by-default: 1.0.1
+      minimatch: 3.1.2
+      pstree.remy: 1.1.8
+      semver: 7.7.2
+      simple-update-notifier: 2.0.0
+      supports-color: 5.5.0
+      touch: 3.1.1
+      undefsafe: 2.0.5
 
   nopt@8.1.0:
     dependencies:
@@ -11297,10 +11481,10 @@ snapshots:
     dependencies:
       '@tootallnate/quickjs-emscripten': 0.23.0
       agent-base: 7.1.4
-      debug: 4.4.1(supports-color@10.1.0)
+      debug: 4.4.1
       get-uri: 6.0.5
       http-proxy-agent: 7.0.2
-      https-proxy-agent: 7.0.6(supports-color@10.1.0)
+      https-proxy-agent: 7.0.6
       pac-resolver: 7.0.1
       socks-proxy-agent: 8.0.5
     transitivePeerDependencies:
@@ -11481,6 +11665,26 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
+  precinct@12.2.0:
+    dependencies:
+      '@dependents/detective-less': 5.0.1
+      commander: 12.1.0
+      detective-amd: 6.0.1
+      detective-cjs: 6.0.1
+      detective-es6: 5.0.1
+      detective-postcss: 7.0.1(postcss@8.5.6)
+      detective-sass: 6.0.1
+      detective-scss: 5.0.1
+      detective-stylus: 5.0.1
+      detective-typescript: 14.0.0(typescript@5.9.2)
+      detective-vue2: 2.2.0(typescript@5.9.2)
+      module-definition: 6.0.1
+      node-source-walk: 7.0.1
+      postcss: 8.5.6
+      typescript: 5.9.2
+    transitivePeerDependencies:
+      - supports-color
+
   precinct@12.2.0(supports-color@10.1.0):
     dependencies:
       '@dependents/detective-less': 5.0.1
@@ -11536,9 +11740,9 @@ snapshots:
   proxy-agent@6.5.0:
     dependencies:
       agent-base: 7.1.4
-      debug: 4.4.1(supports-color@10.1.0)
+      debug: 4.4.1
       http-proxy-agent: 7.0.2
-      https-proxy-agent: 7.0.6(supports-color@10.1.0)
+      https-proxy-agent: 7.0.6
       lru-cache: 7.18.3
       pac-proxy-agent: 7.2.0
       proxy-from-env: 1.1.0
@@ -11551,6 +11755,8 @@ snapshots:
   prr@1.0.1: {}
 
   ps-list@8.1.1: {}
+
+  pstree.remy@1.1.8: {}
 
   public-encrypt@4.0.3:
     dependencies:
@@ -11594,7 +11800,7 @@ snapshots:
     dependencies:
       '@puppeteer/browsers': 2.10.6
       chromium-bidi: 7.2.0(devtools-protocol@0.0.1475386)
-      debug: 4.4.1(supports-color@10.1.0)
+      debug: 4.4.1
       devtools-protocol: 0.0.1475386
       typed-query-selector: 2.12.0
       ws: 8.18.3
@@ -11731,7 +11937,6 @@ snapshots:
   readdirp@3.6.0:
     dependencies:
       picomatch: 2.3.1
-    optional: true
 
   readdirp@4.1.2: {}
 
@@ -11845,7 +12050,7 @@ snapshots:
 
   router@2.2.0:
     dependencies:
-      debug: 4.4.1(supports-color@10.1.0)
+      debug: 4.4.1
       depd: 2.0.0
       is-promise: 4.0.0
       parseurl: 1.3.3
@@ -11937,7 +12142,7 @@ snapshots:
 
   send@1.2.0:
     dependencies:
-      debug: 4.4.1(supports-color@10.1.0)
+      debug: 4.4.1
       encodeurl: 2.0.0
       escape-html: 1.0.3
       etag: 1.8.1
@@ -12080,6 +12285,10 @@ snapshots:
     dependencies:
       is-arrayish: 0.3.2
 
+  simple-update-notifier@2.0.0:
+    dependencies:
+      semver: 7.7.2
+
   slash@3.0.0: {}
 
   slash@5.1.0: {}
@@ -12149,7 +12358,7 @@ snapshots:
   socks-proxy-agent@8.0.5:
     dependencies:
       agent-base: 7.1.4
-      debug: 4.4.1(supports-color@10.1.0)
+      debug: 4.4.1
       socks: 2.8.6
     transitivePeerDependencies:
       - supports-color
@@ -12334,6 +12543,10 @@ snapshots:
 
   supports-color@10.1.0: {}
 
+  supports-color@5.5.0:
+    dependencies:
+      has-flag: 3.0.0
+
   supports-color@7.2.0:
     dependencies:
       has-flag: 4.0.0
@@ -12481,6 +12694,8 @@ snapshots:
 
   tomlify-j0.4@3.0.0: {}
 
+  touch@3.1.1: {}
+
   tr46@0.0.3: {}
 
   tr46@5.1.1:
@@ -12562,6 +12777,8 @@ snapshots:
       through: 2.3.8
 
   uncrypto@0.1.3: {}
+
+  undefsafe@2.0.5: {}
 
   undici-types@7.10.0: {}
 
@@ -12709,7 +12926,7 @@ snapshots:
     dependencies:
       chalk: 4.1.2
       commander: 9.5.0
-      debug: 4.4.1(supports-color@10.1.0)
+      debug: 4.4.1
     transitivePeerDependencies:
       - supports-color
 

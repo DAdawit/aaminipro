@@ -16,6 +16,14 @@ router.get("/", (req, res) => {
 });
 
 router.get("/users", userController.index);
+router.post(
+  "/users/assign-permission/:id",
+  userController.assignExtraPermissions
+);
+router.post(
+  "/users/restrict-permission/:id",
+  userController.restrictUsersPermission
+);
 router.get("/users/count", userController.getUserCount);
 router.get("/users/:id", userController.getUser);
 router.post("/users", userController.registerUser);

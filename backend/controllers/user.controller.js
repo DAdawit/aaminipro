@@ -1,11 +1,14 @@
 const mongoose = require("mongoose");
-const User = require("../models/Users.model.js");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const User = require("../models/Users.model.js");
 require("dotenv").config();
 const formidable = require("formidable");
 const fs = require("fs");
 const path = require("path");
+const Permission = require("../models/permission.model.js");
+const Group = require("../models/group-permissions.model.js");
+const GroupPermission = require("../models/group-permissions.model.js");
 const maxAge = 3 * 24 * 60 * 60;
 function createToken(id) {
   const secrete = process.env.ACCESS_TOKEN_SECRET;
@@ -310,7 +313,6 @@ module.exports.updateProfilePicture = async (req, res) => {
       console.log(err);
       return res.status(500).send("Form parse error");
     }
-
     // Ensure uploads directory exists
     const uploadDir = path.join(__dirname, "..", "uploads", "userPprofile");
     if (!fs.existsSync(uploadDir)) {
@@ -363,3 +365,157 @@ function ensureUploadDir(uploadDir) {
 // Usage in your code
 const uploadDir = path.join(__dirname, "..", "uploads/userPprofile");
 ensureUploadDir(uploadDir);
+
+// assign extra permission
+module.exports.assignExtraPermissions = async (req, res) => {
+  try {
+    const userID = req.params.id;
+    if (!userID) {
+      return res.status(404).json({
+        message: "The user is not found.",
+      });
+    }
+    // get users
+    const user = await User.findById(userID).populate({
+      path: "groupPermissions",
+      select: "_id",
+    });
+    if (!user) {
+      return res
+        .status(401)
+        .json({ message: "The user is not found", status: "fail" });
+    }
+
+    const { permissionIds } = req.body;
+
+    if (!Array.isArray(permissionIds) || permissionIds.length === 0) {
+      return res.status(400).json({
+        message: "Permission IDs must be a non-empty array",
+        status: "fail",
+      });
+    }
+    let tempPermission = [];
+    for (const perm of permissionIds) {
+      if (!mongoose.isValidObjectId(perm)) {
+        return res.status(400).json({
+          message: "This permission id is not valid.",
+          status: "fail",
+        });
+      }
+      const findPerm = await Permission.findOne({ _id: perm });
+      if (!findPerm) {
+        return res.status(400).json({
+          message: "This permission id is not found.",
+          status: "fail",
+        });
+      }
+      const findUserGroup = user.groupPermissions.permissions?.some(
+        (u) => u._id === perm
+      );
+      if (findUserGroup) {
+        return res.status(409).json({
+          message: "The user already the permission.",
+        });
+      }
+      const findPermission = user.extraPermissions.includes(perm);
+      console.log(findPermission, "permissii");
+      if (findPermission) {
+        return res.status(409).json({
+          message: "The user already the permission.",
+        });
+      }
+
+      tempPermission.push(perm);
+    }
+    const newPermissions = [...user.restrictedPermissions, ...tempPermission];
+
+    await User.findByIdAndUpdate(userID, { extraPermissions: newPermissions });
+
+    return res.status(200).json({
+      message: "Extra permissions assigned successfully",
+      status: "success",
+      user: {
+        id: user._id,
+        email: user.email,
+        extraPermissions: user.extraPermissions,
+      },
+    });
+  } catch (error) {
+    console.error("Assign extra permissions error:", error);
+    return res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+};
+
+// add permissions on restricted permission
+module.exports.restrictUsersPermission = async (req, res) => {
+  try {
+    const userID = req.params.id;
+    if (!userID) {
+      return res.status(404).json({
+        message: "The user is not found.",
+      });
+    }
+    // get users
+    const user = await User.findById(userID);
+    if (!user) {
+      return res
+        .status(401)
+        .json({ message: "The user is not found", status: "fail" });
+    }
+
+    const { permissionIds } = req.body;
+
+    if (!Array.isArray(permissionIds) || permissionIds.length === 0) {
+      return res.status(400).json({
+        message: "Permission IDs must be a non-empty array",
+        status: "fail",
+      });
+    }
+    let tempPermission = [];
+    for (const perm of permissionIds) {
+      if (!mongoose.isValidObjectId(perm)) {
+        return res.status(400).json({
+          message: "This permission id is not valid.",
+          status: "fail",
+        });
+      }
+      const findPerm = await Permission.findOne({ _id: perm });
+      if (!findPerm) {
+        return res.status(400).json({
+          message: "This permission id is not found.",
+          status: "fail",
+        });
+      }
+      const FoundonList = user.restrictedPermissions?.includes(perm);
+      if (FoundonList) {
+        return res.status(409).json({
+          message: "The permission already restricted.",
+        });
+      }
+      tempPermission.push(perm);
+    }
+    console.log(tempPermission);
+    const newRestrictions = [...user.restrictedPermissions, ...tempPermission];
+    await User.findByIdAndUpdate(userID, {
+      restrictedPermissions: newRestrictions,
+    });
+    return res.status(200).json({
+      message: " permission restricted successfully.",
+      status: "success",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        restrictedPermissions: user.restrictedPermissions,
+      },
+    });
+  } catch (error) {
+    console.log("On restrict permission:", error);
+    return res
+      .status(500)
+      .send({ status: "error", message: "Internal Server Error" });
+  }
+};

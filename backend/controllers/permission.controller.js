@@ -77,6 +77,7 @@ const registerPermission = async (req, res) => {
 };
 const getAllPermission = async (req, res) => {
   try {
+    console.log('object')
     const permissions = await Permission.find();
     res.status(201).json({
       permissions: permissions ? permissions : [],

@@ -6,10 +6,18 @@ const isSafeString = (input) => {
 };
 
 const checkContent = (fields) => {
+<<<<<<< HEAD
   let isValid = false;
   for (const field of fields) {
     if (isSafeString(field)) {
       isValid = true;
+=======
+    let isValid = false
+    for (const field of fields) {
+        if (isSafeString(field)) {
+            isValid = true
+        }
+>>>>>>> 9099cfef5b5b3526209596b3fd234a9a26e26de3
     }
   }
   return isValid;

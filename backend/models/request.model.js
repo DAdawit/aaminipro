@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const CaseSchema = new mongoose.Schema(
+const RequestSchema = new mongoose.Schema(
   {
     title: {
       type: String,
@@ -9,6 +9,11 @@ const CaseSchema = new mongoose.Schema(
     description: {
       type: String,
       required: true,
+    },
+    request_status: {
+      type: String,
+      enum: ["pending", "approved", "rejected"],
+      default: "pending",
     },
     status: {
       type: String,
@@ -25,27 +30,20 @@ const CaseSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    response: {
-      type: String,
-      default: null,
-    },
-    responseGiven: {
-      type: Boolean,
-      default: false,
-    },
-    responseApproved: {
-      type: String,
-      enum: ["yes", "no"],
-      default: "no",
-    },
+    requestResponse: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "RequestResponse",
+      },
+    ],
   },
   {
     timestamps: true,
   }
 );
-CaseSchema.set("toJSON", {
-  virtuals: true,
-});
-const Request = mongoose.model("Request", CaseSchema);
+
+RequestSchema.set("toJSON", { virtuals: true });
+
+const Request = mongoose.model("Request", RequestSchema);
 
 module.exports = Request;

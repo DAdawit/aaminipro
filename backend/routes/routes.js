@@ -64,5 +64,13 @@ router.delete(
   "/groupPermissions/:id",
   groupPermissionController.deleteGroupPermission
 );
+router.get(
+  "/groupPermissions/:id",
+  groupPermissionController.getGroupPermissionById
+);
+router.put(
+  "/groupPermissions/removeSinglePermission/:id",
+  groupPermissionController.removeSinglePermissionFromGroup
+);
 
 module.exports = router;

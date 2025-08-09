@@ -2,6 +2,34 @@ const mongoose = require("mongoose");
 const GroupPermission = require("../models/group-permissions.model.js");
 const Permission = require("../models/permission.model");
 
+const getGroupPermissionById = async (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({ message: "Group Permission ID is required" });
+  }
+
+  if (!mongoose.isValidObjectId(id)) {
+    return res.status(400).json({ message: "Invalid Group Permission ID" });
+  }
+
+  try {
+    const groupPermission = await GroupPermission.findById(id).populate(
+      "permissions"
+    );
+    if (!groupPermission) {
+      return res.status(404).json({ message: "Group Permission not found" });
+    }
+    return res.status(200).json(groupPermission);
+  } catch (error) {
+    return res.status(500).json({
+      message: "Error retrieving Group Permission",
+      status: "error",
+      error: error.message,
+    });
+  }
+};
+
 const groupPermissions = async (req, res) => {
   const { name, permissions, createdBy } = req.body;
 
@@ -160,14 +188,50 @@ const updateGroupPermission = async (req, res) => {
         .status(500)
         .send({ message: "Error updating Group Permission" });
     });
-
-  // return res.status(200).send(oldTempPermissions);
-
-  // Proceed with updating the group permission
 };
+
+const removeSinglePermissionFromGroup = async (req, res) => {
+  if (!mongoose.isValidObjectId(req.params.id)) {
+    return res.status(400).send({ message: "Invalid Permission Id" });
+  }
+  if (!mongoose.isValidObjectId(req.body.permissionId)) {
+    return res.status(400).send({ message: "Invalid Group Permission Id" });
+  }
+
+  const groupPermission = await GroupPermission.findById(req.params.id);
+  if (!groupPermission) {
+    return res.status(404).send({ message: "Group Permission not found" });
+  }
+
+  try {
+    await GroupPermission.findByIdAndUpdate(
+      req.params.id,
+      {
+        $pull: { permissions: req.body.permissionId },
+      },
+      {
+        new: true,
+      }
+    )
+      .then((updatedGroup) => {
+        return res.status(200).send(updatedGroup);
+      })
+      .catch((error) => {
+        return res.send({ message: "Error removing permission" });
+      });
+  } catch (error) {
+    console.error("Error removing permission:", error);
+    return res
+      .status(500)
+      .send({ message: "Internal Server Error On removing Permission" });
+  }
+};
+
 module.exports = {
   groupPermissions,
   getGroupPermissions,
   deleteGroupPermission,
   updateGroupPermission,
+  removeSinglePermissionFromGroup,
+  getGroupPermissionById,
 };

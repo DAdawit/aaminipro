@@ -141,14 +141,6 @@ const updateGroupPermission = async (req, res) => {
     return res.status(400).send({ message: "Invalid Group Permission ID" });
   }
 
-  // const checkPermissionName = await GroupPermission.findOne({
-  //   name: req.body.name,
-  // });
-  // if (checkPermissionName) {
-  //   return res
-  //     .status(400)
-  //     .send({ message: "Group Permission name already exists" });
-  // }
   let oldTempPermissions = [];
 
   let oldGroupPermissions = await GroupPermission.findById(

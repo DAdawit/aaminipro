@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/user.controller");
 const groupPermissionController = require("../controllers/groupPermission.controller");
+const caseController = require("../controllers/case.controller");
 const fileUploader = require("../utils/fileUploader");
 const formidable = require("formidable");
 const fs = require("fs");
@@ -72,5 +73,13 @@ router.put(
   "/groupPermissions/removeSinglePermission/:id",
   groupPermissionController.removeSinglePermissionFromGroup
 );
+
+// case routes
+
+router.get("/cases", caseController.getAllCases);
+router.get("/cases/:id", caseController.getCaseById);
+router.post("/cases", caseController.createCase);
+router.put("/cases/:id", caseController.updateCase);
+router.delete("/cases/:id", caseController.deleteCase);
 
 module.exports = router;

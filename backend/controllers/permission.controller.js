@@ -43,7 +43,7 @@ const registerPermission = async (req, res) => {
         });
       }
     }
-    if (!mongoose.Types.ObjectId.isValid(createdBy)) {
+    if (!mongoose.isValidObjectId(createdBy)) {
       return res.status(400).send({ message: "Invalid User ID" });
     }
     const fields = [name, codeName, description];
@@ -79,7 +79,7 @@ const registerPermission = async (req, res) => {
 };
 const getAllPermission = async (req, res) => {
   try {
-    console.log('object')
+    console.log("object");
     const permissions = await Permission.find();
     res.status(201).json({
       permissions: permissions ? permissions : [],
@@ -239,11 +239,11 @@ const addGroupPermissionToUser = async (req, res) => {
         status: "fail",
       });
     }
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
+    if (!mongoose.isValidObjectId(userId)) {
       return res.status(400).send({ message: "Invalid User ID" });
     }
 
-    if (!mongoose.Types.ObjectId.isValid(groupPermissionId)) {
+    if (!mongoose.isValidObjectId(groupPermissionId)) {
       return res.status(400).send({ message: "Invalid Group Permission ID" });
     }
     const user = await User.findById(userId);

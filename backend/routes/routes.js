@@ -50,11 +50,11 @@ router.delete(
   "/permission/delete/:permissionId",
   PermissionController.deletePermission
 );
-router.get(
-  "/permission/getGroupPermissions",
-  groupPermissionController.getGroupPermissions
-);
+
 router.post(
   "/permission/groupPermissions",
   groupPermissionController.groupPermissions
 );
+router.get("/groupPermissions", groupPermissionController.getGroupPermissions);
+
+module.exports = router;

@@ -3,7 +3,6 @@ const GroupPermission = require("../models/group-permissions.model.js");
 const Permission = require("../models/permission.model");
 
 const groupPermissions = async (req, res) => {
-  // return res.send("hello");
   const { name, permissions, createdBy } = req.body;
 
   // Validate input
@@ -19,13 +18,13 @@ const groupPermissions = async (req, res) => {
     return res.status(400).json({ message: "Created by is required" });
   }
 
-  if (!mongoose.Types.ObjectId.isValid(createdBy)) {
+  if (!mongoose.isValidObjectId(createdBy)) {
     return res.status(400).json({ message: "Invalid User ID" });
   }
 
   let validPermissions = [];
   for (const permissionId of permissions) {
-    if (!mongoose.Types.ObjectId.isValid(permissionId)) {
+    if (!mongoose.isValidObjectId(permissionId)) {
       return res
         .status(400)
         .json({ message: `Invalid Permission ID: ${permissionId}` });
@@ -37,14 +36,15 @@ const groupPermissions = async (req, res) => {
         .status(400)
         .json({ message: `Permission not found: ${permissionId}` });
     }
-    validPermissions.push(permission);
+    validPermissions.push(permissionId);
   }
+  // return res.send(validPermissions);
 
   // Create group
   try {
     const group = new GroupPermission({
       name,
-      validPermissions,
+      permissions: validPermissions,
       createdBy,
     });
     await group.save();
@@ -63,8 +63,11 @@ const groupPermissions = async (req, res) => {
 };
 
 const getGroupPermissions = async (req, res) => {
+  // return res.send("fhello");
   try {
-    const groupPermissions = await GroupPermission.find();
+    const groupPermissions = await GroupPermission.find({}).populate(
+      "permissions"
+    );
     return res.status(200).send(groupPermissions);
   } catch (error) {
     return res.status(500).json({
@@ -75,7 +78,28 @@ const getGroupPermissions = async (req, res) => {
   }
 };
 
+const deleteGroupPermission = async (req, res) => {
+  if (!req.params.id) {
+    return res.status(400).send("Group permission id is required");
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).send("Invalid Group Permission ID");
+  }
+
+  await GroupPermission.findByIdAndDelete(req.params.id)
+    .then((permission) => {
+      if (!permission) {
+        return res.status(404).send("Group Permission not found");
+      }
+      return res.status(200).send("Group Permission deleted successfully");
+    })
+    .catch((error) => {
+      return res.status(500).send("Error deleting Group Permission");
+    });
+};
 module.exports = {
   groupPermissions,
   getGroupPermissions,
+  deleteGroupPermission,
 };

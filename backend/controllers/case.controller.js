@@ -1,8 +1,8 @@
-const Case = require("../models/case.model");
+const Request = require("../models/request.model");
 
 const getAllCases = async (req, res) => {
   try {
-    const cases = await Case.find()
+    const cases = await Request.find()
       .populate("createdBy", "name")
       .populate("assignedTo", "name");
     res.status(200).json(cases);

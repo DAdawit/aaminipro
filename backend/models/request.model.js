@@ -25,7 +25,6 @@ const CaseSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-
     response: {
       type: String,
       default: null,
@@ -47,6 +46,6 @@ const CaseSchema = new mongoose.Schema(
 CaseSchema.set("toJSON", {
   virtuals: true,
 });
-const Case = mongoose.model("Case", CaseSchema);
+const Request = mongoose.model("Request", CaseSchema);
 
-module.exports = Case;
+module.exports = Request;

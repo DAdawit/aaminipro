@@ -55,7 +55,7 @@ module.exports.getUser = async (req, res) => {
     return res.status(400).send({ message: "User ID is required" });
   }
   // isValidObjectId(req.params.id) is a mongoose method to check if the id is valid
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+  if (!mongoose.isValidObjectId(req.params.id)) {
     return res.status(400).send({ message: "Invalid User ID" });
   }
   await User.findById(req.params.id)
@@ -164,7 +164,7 @@ module.exports.registerUser = async (req, res) => {
             return res.status(400).send({ message: "createdBy is required" });
           }
           // isValidObjectId(req.params.id) is a mongoose method to check if the id is valid
-          if (!mongoose.Types.ObjectId.isValid(createdBy[0])) {
+          if (!mongoose.isValidObjectId(createdBy[0])) {
             return res.status(400).send({ message: "Invalid User ID" });
           }
 
@@ -195,11 +195,11 @@ module.exports.registerUser = async (req, res) => {
             .save()
             .then(async (result) => {
               const token = await createToken(result._id);
-              res.cookie("token", token, {
-                httpOnly: true,
-                maxAge: maxAge * 1000,
-              });
-
+              // res.cookie("token", token, {
+              //   httpOnly: true,
+              //   maxAge: maxAge * 1000,
+              // });
+              // res.clearCookie("token");
               res.status(201).send({ user: result, token: token });
             })
             .catch((err) => {
@@ -284,7 +284,7 @@ module.exports.deleteUser = async (req, res) => {
   if (!req.params.id) {
     return res.status(400).send({ message: "User ID is required" });
   }
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+  if (!mongoose.isValidObjectId(req.params.id)) {
     return res.status(400).send({ message: "Invalid User ID" });
   }
   await User.findByIdAndDelete(req.params.id)
@@ -304,7 +304,7 @@ module.exports.updateUser = async (req, res) => {
   if (!req.params.id) {
     return res.status(400).send({ message: "User ID is required" });
   }
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+  if (!mongoose.isValidObjectId(req.params.id)) {
     return res.status(400).send({ message: "Invalid User ID" });
   }
 
@@ -334,7 +334,7 @@ module.exports.updateProfilePicture = async (req, res) => {
   if (!req.params.id) {
     return res.status(400).send({ message: "User ID is required" });
   }
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+  if (!mongoose.isValidObjectId(req.params.id)) {
     return res.status(400).send({ message: "Invalid User ID" });
   }
 

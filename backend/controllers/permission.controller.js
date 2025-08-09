@@ -253,12 +253,9 @@ const addGroupPermissionToUser = async (req, res) => {
         status: "fail",
       });
     }
-<<<<<<< HEAD
-=======
     if (!mongoose.isValidObjectId(userId)) {
       return res.status(400).send({ message: "Invalid User ID" });
     }
->>>>>>> d848d993cad9e0b3c8a61a9f31d03a3aa1fcedb3
 
     if (!mongoose.isValidObjectId(groupPermissionId)) {
       return res.status(400).send({ message: "Invalid Group Permission ID" });

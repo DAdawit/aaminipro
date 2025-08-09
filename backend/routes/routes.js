@@ -56,5 +56,13 @@ router.post(
   groupPermissionController.groupPermissions
 );
 router.get("/groupPermissions", groupPermissionController.getGroupPermissions);
+router.put(
+  "/groupPermissions/:id",
+  groupPermissionController.updateGroupPermission
+);
+router.delete(
+  "/groupPermissions/:id",
+  groupPermissionController.deleteGroupPermission
+);
 
 module.exports = router;

@@ -80,26 +80,94 @@ const getGroupPermissions = async (req, res) => {
 
 const deleteGroupPermission = async (req, res) => {
   if (!req.params.id) {
-    return res.status(400).send("Group permission id is required");
+    return res.status(400).send({ message: "Group permission id is required" });
   }
 
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-    return res.status(400).send("Invalid Group Permission ID");
+  if (!mongoose.isValidObjectId(req.params.id)) {
+    return res.status(400).send({ message: "Invalid Group Permission ID" });
   }
 
   await GroupPermission.findByIdAndDelete(req.params.id)
     .then((permission) => {
       if (!permission) {
-        return res.status(404).send("Group Permission not found");
+        return res.status(404).send({ message: "Group Permission not found" });
       }
-      return res.status(200).send("Group Permission deleted successfully");
+      return res
+        .status(200)
+        .send({ message: "Group Permission deleted successfully" });
     })
     .catch((error) => {
-      return res.status(500).send("Error deleting Group Permission");
+      return res
+        .status(500)
+        .send({ message: "Error deleting Group Permission" });
     });
+};
+
+const updateGroupPermission = async (req, res) => {
+  // return res.send("hello");
+  if (!req.params.id) {
+    return res.status(400).send({ message: "Group permission id is required" });
+  }
+
+  if (!mongoose.isValidObjectId(req.params.id)) {
+    return res.status(400).send({ message: "Invalid Group Permission ID" });
+  }
+
+  // const checkPermissionName = await GroupPermission.findOne({
+  //   name: req.body.name,
+  // });
+  // if (checkPermissionName) {
+  //   return res
+  //     .status(400)
+  //     .send({ message: "Group Permission name already exists" });
+  // }
+  let oldTempPermissions = [];
+
+  let oldGroupPermissions = await GroupPermission.findById(
+    req.params.id
+  ).populate({
+    path: "permissions",
+    select: "_id, name",
+  });
+
+  oldTempPermissions = oldGroupPermissions.permissions.map((p) =>
+    p._id.toString()
+  );
+  const mergedPermissionsSet = new Set([
+    ...oldTempPermissions,
+    ...req.body.permissions,
+  ]);
+  // console.log(oldTempPermissions, req.body.permissions);
+  // console.log(newCleanPermissions);
+
+  const newCleanPermissions = Array.from(mergedPermissionsSet);
+  // console.log(newCleanPermissions);
+  await GroupPermission.findByIdAndUpdate(
+    req.params.id,
+    {
+      name: req.body.name || oldGroupPermissions.name,
+      permissions: newCleanPermissions,
+    },
+    {
+      new: true,
+    }
+  )
+    .then((updatedGroup) => {
+      return res.status(200).send(updatedGroup);
+    })
+    .catch((error) => {
+      return res
+        .status(500)
+        .send({ message: "Error updating Group Permission" });
+    });
+
+  // return res.status(200).send(oldTempPermissions);
+
+  // Proceed with updating the group permission
 };
 module.exports = {
   groupPermissions,
   getGroupPermissions,
   deleteGroupPermission,
+  updateGroupPermission,
 };

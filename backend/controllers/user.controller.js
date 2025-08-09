@@ -449,7 +449,7 @@ module.exports.assignExtraPermissions = async (req, res) => {
         });
       }
       const findPermission = user.extraPermissions.includes(perm);
-      console.log(findPermission, "permissii");
+      console.log(findPermission, "permissi");
       if (findPermission) {
         return res.status(409).json({
           message: "The user already the permission.",
@@ -458,9 +458,14 @@ module.exports.assignExtraPermissions = async (req, res) => {
 
       tempPermission.push(perm);
     }
-    const newPermissions = [...user.restrictedPermissions, ...tempPermission];
+    const newPermissions = [...user.extraPermissions, ...tempPermission];
+    const uniquePermissions = [...new Set(newPermissions)];
+    console.log({ uniquePermissions });
+    // const permissions =  Array.isArray(newPermissions)
 
-    await User.findByIdAndUpdate(userID, { extraPermissions: newPermissions });
+    const updatedUser = await User.findByIdAndUpdate(userID, {
+      extraPermissions: uniquePermissions,
+    });
 
     return res.status(200).json({
       message: "Extra permissions assigned successfully",
@@ -468,7 +473,7 @@ module.exports.assignExtraPermissions = async (req, res) => {
       user: {
         id: user._id,
         email: user.email,
-        extraPermissions: user.extraPermissions,
+        extraPermissions: updatedUser.extraPermissions,
       },
     });
   } catch (error) {
@@ -479,8 +484,89 @@ module.exports.assignExtraPermissions = async (req, res) => {
     });
   }
 };
+// assign extra permission
+module.exports.removeExtraPermissions = async (req, res) => {
+  try {
+    const userID = req.params.id;
+    if (!userID) {
+      return res.status(404).json({
+        message: "The user is not found.",
+      });
+    }
+    if (!mongoose.isValidObjectId(userID)) {
+      return res.status(400).json({
+        message: "The user id is not valid.",
+      });
+    }
+    // get users
+    const user = await User.findById(userID);
+    if (!user) {
+      return res
+        .status(401)
+        .json({ message: "The user is not found", status: "fail" });
+    }
 
-// add permissions on restricted permission
+    const { permissionIds } = req.body;
+    // console.log({ permissionIds });
+
+    if (!Array.isArray(permissionIds) || permissionIds.length === 0) {
+      return res.status(400).json({
+        message: "Permission IDs is empty array",
+        status: "fail",
+      });
+    }
+    let tempPermission = [];
+    for (const perm of permissionIds) {
+      if (!mongoose.isValidObjectId(perm)) {
+        return res.status(400).json({
+          message: "This permission id is not valid.",
+          status: "fail",
+        });
+      }
+      const findPerm = await Permission.findOne({ _id: perm });
+      if (!findPerm) {
+        return res.status(400).json({
+          message: "This permission id is not found.",
+          status: "fail",
+        });
+      }
+      const findUserExtraPermissions = user.extraPermissions.includes(perm);
+      console.log({ findUserExtraPermissions });
+      if (findUserExtraPermissions) {
+        // tempPermission.push(perm);
+        tempPermission = user.extraPermissions.filter(
+          (p) => p.toString() !== perm
+        );
+
+        // return res.status(409).json({
+        //   message: "The user has not this permission.",
+        // });
+      }
+    }
+
+    const newperm = [...new Set(tempPermission)];
+
+    const updatedUser = await User.findByIdAndUpdate(userID, {
+      extraPermissions: newperm,
+    });
+
+    return res.status(200).json({
+      message: "Extra permissions removed successfully",
+      status: "success",
+      user: {
+        id: user._id,
+        email: user.email,
+        extraPermissions: updatedUser.extraPermissions,
+      },
+    });
+  } catch (error) {
+    console.error("Assign extra permissions error:", error);
+    return res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+};
 module.exports.restrictUsersPermission = async (req, res) => {
   try {
     const userID = req.params.id;
@@ -489,8 +575,16 @@ module.exports.restrictUsersPermission = async (req, res) => {
         message: "The user is not found.",
       });
     }
+    if (!mongoose.isValidObjectId(userID)) {
+      return res.status(404).json({
+        message: "The user id  is not valid.",
+      });
+    }
     // get users
-    const user = await User.findById(userID);
+    const user = await User.findById(userID).populate({
+      path: "groupPermissions",
+      select: "_id",
+    });
     if (!user) {
       return res
         .status(401)
@@ -516,37 +610,124 @@ module.exports.restrictUsersPermission = async (req, res) => {
       const findPerm = await Permission.findOne({ _id: perm });
       if (!findPerm) {
         return res.status(400).json({
-          message: "This permission id is not found.",
+          message: "This permission is not found.",
           status: "fail",
         });
       }
-      const FoundonList = user.restrictedPermissions?.includes(perm);
-      if (FoundonList) {
+      const findUserGroup = user.groupPermissions.permissions?.some(
+        (u) => u._id === perm
+      );
+      // if (!findUserGroup) {
+      //   return res.status(409).json({
+      //     message: "The user have no this permission.",
+      //   });
+      // }
+      const findPermission = user.restrictedPermissions.includes(perm);
+      if (findPermission) {
         return res.status(409).json({
-          message: "The permission already restricted.",
+          message: "The user is already restricted.",
         });
       }
+
       tempPermission.push(perm);
     }
-    console.log(tempPermission);
-    const newRestrictions = [...user.restrictedPermissions, ...tempPermission];
-    await User.findByIdAndUpdate(userID, {
-      restrictedPermissions: newRestrictions,
+    const newPermissions = [...user.restrictedPermissions, ...tempPermission];
+    const uniquePermissions = [...new Set(newPermissions)];
+    const updatedUser = await User.findByIdAndUpdate(userID, {
+      restrictedPermissions: uniquePermissions,
     });
+
     return res.status(200).json({
-      message: " permission restricted successfully.",
+      message: "The permissions is restricted successfully",
       status: "success",
       user: {
         id: user._id,
-        name: user.name,
         email: user.email,
-        restrictedPermissions: user.restrictedPermissions,
+        restrictedPermissions: updatedUser.restrictedPermissions,
       },
     });
   } catch (error) {
-    console.log("On restrict permission:", error);
-    return res
-      .status(500)
-      .send({ status: "error", message: "Internal Server Error" });
+    console.error("permissions is restricted error:", error);
+    return res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+};
+// remove permissions from restricted permission
+module.exports.removePermissionsRestricted = async (req, res) => {
+  try {
+    const userID = req.params.id;
+    if (!userID) {
+      return res.status(404).json({
+        message: "The user is not found.",
+      });
+    }
+    if (!mongoose.isValidObjectId(userID)) {
+      return res.status(404).json({
+        message: "The user id  is not valid.",
+      });
+    }
+    // get users
+    const user = await User.findById(userID).populate({
+      path: "groupPermissions",
+      select: "_id",
+    });
+    if (!user) {
+      return res
+        .status(401)
+        .json({ message: "The user is not found", status: "fail" });
+    }
+
+    const { permissionIds } = req.body;
+
+    if (!Array.isArray(permissionIds) || permissionIds.length === 0) {
+      return res.status(400).json({
+        message: "Permission IDs must be a non-empty array",
+        status: "fail",
+      });
+    }
+    let permissions;
+    for (const perm of permissionIds) {
+      if (!mongoose.isValidObjectId(perm)) {
+        return res
+          .status(400)
+          .json({ message: `Invalid permission ID: ${perm}` });
+      }
+      permissions = await Permission.findOne({ _id: perm });
+      if (!permissions) {
+        return res.status(400).json({ message: "The permissions not found" });
+      }
+    }
+
+    const permissionIdStrings = permissionIds.map((id) => id.toString());
+    const tempPermission = user.restrictedPermissions.filter(
+      (p) => !permissionIdStrings.includes(p._id.toString())
+    );
+    const newperm = [
+      ...new Map(tempPermission.map((p) => [p._id.toString(), p])).values(),
+    ];
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userID,
+      { restrictedPermissions: newperm },
+      { new: true }
+    );
+
+    return res.status(200).json({
+      message: "Permissions removed from restriction successfully",
+      status: "success",
+      user: {
+        id: updatedUser._id,
+        email: updatedUser.email,
+        restrictedPermissions: updatedUser.restrictedPermissions,
+      },
+    });
+  } catch (error) {
+    console.error("permissions is restricted removal error:", error);
+    return res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
   }
 };

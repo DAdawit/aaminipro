@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const GroupPermission = require("../models/group-permissions.model.js");
 const Permission = require("../models/permission.model");
+const User = require("../models/Users.model.js");
 
 const groupPermissions = async (req, res) => {
   // return res.send("hello");
@@ -74,8 +75,136 @@ const getGroupPermissions = async (req, res) => {
     });
   }
 };
+const getGroupPermissionsById = async (req, res) => {
+  try {
+    const { groupPermissionId } = req.params;
+    if (!groupPermissionId || !mongoose.isValidObjectId(groupPermissionId)) {
+      return res.status(400).json({
+        message: "The Permission Group id is not valid.",
+      });
+    }
+    const groupPermissions = await GroupPermission.findById(groupPermissionId);
+    if (!groupPermissions) {
+      return res.status(404).json({
+        message: "The user is not found.",
+      });
+    }
+    return res.status(200).send(groupPermissions);
+  } catch (error) {
+    return res.status(500).json({
+      message: "Error retrieving group permissions",
+      status: "error",
+      error: error.message,
+    });
+  }
+};
 
+// update group permissions
+const updateGroupPermissions = async (req, res) => {
+  try {
+    const { groupPermissionId, userId } = req.params;
+    if (!userId) {
+      return res.status(400).json({
+        message: "The userId is required",
+        status: "fail",
+      });
+    }
+    if (mongoose.isValidObjectId(userId)) {
+      return res.status(400).json({
+        message: "The user id is not valid",
+        status: "fail",
+      });
+    }
+    if (!groupPermissionId) {
+      return res.status(400).json({
+        message: "The id is required",
+        status: "fail",
+      });
+    }
+    if (mongoose.isValidObjectId(groupPermissionId)) {
+      return res.status(400).json({
+        message: "The id is not valid",
+        status: "fail",
+      });
+    }
+    const permissionGroup = await GroupPermission.findById(groupPermissionId);
+    if (!permissionGroup) {
+      return res.status(404).json({
+        message: "The permission is not found.",
+        status: "fail",
+      });
+    }
+    const { name, permissions, createdBy } = req.body;
+
+    if (!Array.isArray(permissions)) {
+      return res.status(404).json({
+        message: "The permission must be array.",
+        status: "fail",
+      });
+    }
+    const user = await User.findOne({ _id: createdBy });
+    if (!user) {
+      return res.status(404).json({
+        message: "The user is not found.",
+        status: "fail",
+      });
+    }
+    await GroupPermission.findByIdAndUpdate(groupPermissionId, {
+      name: name ? name : permissionGroup.name,
+      permissions:
+        permissions.length !== 0 ? permissions : permissionGroup.permissions,
+      createdBy: createdBy ? createdBy : permissionGroup.createdBy,
+    });
+    return res.status(200).json({
+      message: "The permission group updated successfully",
+      status: "success",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Error retrieving group permissions",
+      status: "error",
+    });
+  }
+};
+// delete group permissions
+const deleteGroupPermissions = async (req, res) => {
+  try {
+    const { groupPermissionId } = req.params;
+    if (!groupPermissionId) {
+      return res.status(400).json({
+        message: "The id is required",
+        status: "fail",
+      });
+    }
+    if (mongoose.isValidObjectId(groupPermissionId)) {
+      return res.status(400).json({
+        message: "The id is not valid",
+        status: "fail",
+      });
+    }
+    const permissionGroup = await GroupPermission.findById(groupPermissionId);
+    if (!permissionGroup) {
+      return res.status(404).json({
+        message: "The permission is not found.",
+        status: "fail",
+      });
+    }
+    await GroupPermission.findByIdAndDelete(groupPermissionId);
+    return res.status(204).json({
+      message: "The permission group deleted successfully",
+      status: "success",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Error retrieving group permissions",
+      status: "error",
+    });
+  }
+};
 module.exports = {
   groupPermissions,
   getGroupPermissions,
+  getGroupPermissionsById,
+  deleteGroupPermissions,
+  updateGroupPermissions,
 };

@@ -15,13 +15,21 @@ router.get("/", (req, res) => {
   });
 });
 
-router.post(
+router.put(
   "/users/assign-permission/:id",
   userController.assignExtraPermissions
 );
-router.post(
+router.put(
+  "/users/remove-permission/:id",
+  userController.removeExtraPermissions
+);
+router.put(
   "/users/restrict-permission/:id",
   userController.restrictUsersPermission
+);
+router.put(
+  "/users/remove-restrict-permission/:id",
+  userController.removePermissionsRestricted
 );
 router.get("/users", userController.getUsers);
 router.get("/users/count", userController.getUserCount);
@@ -50,11 +58,26 @@ router.delete(
   "/permission/delete/:permissionId",
   PermissionController.deletePermission
 );
+// permission groups.
 router.get(
   "/permission/getGroupPermissions",
   groupPermissionController.getGroupPermissions
+);
+router.get(
+  "/permission/getGroupPermissions/permissionId",
+  groupPermissionController.getGroupPermissionsById
 );
 router.post(
   "/permission/groupPermissions",
   groupPermissionController.groupPermissions
 );
+router.put(
+  "/permission/groupPermissions/:permissionId/:userId",
+  groupPermissionController.updateGroupPermissions
+);
+router.delete(
+  "/permission/groupPermissions/:permissionId",
+  groupPermissionController.deleteGroupPermissions
+);
+
+module.exports = router;

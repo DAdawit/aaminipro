@@ -5,7 +5,7 @@ const Request = require("../models/request.model");
 
 const sendRequest = async (req, res) => {
   try {
-    const { userId } = req.params;
+    const userId = req.params.userId ? req.params.userId : null;
     if (!userId) {
       return res.status(404).json({
         message: "The id is not found",
@@ -28,8 +28,9 @@ const sendRequest = async (req, res) => {
     //   (file) => file.originalname
     // );
     const files = [];
-    // console.log(tempfiles);
-    const { title, description, assignedTo } = req.body;
+    const title = req.body.title ? req.body.title : null;
+    const description = req.body.description ? req.body.description : null;
+    const assignedTo = req.body.assignedTo ? req.body.assignedTo : null;
     if (!assignedTo) {
       return res.status(404).json({
         message: "The assigned user id is not found.",

@@ -6,7 +6,10 @@ const fileUploader = require("../utils/fileUploader");
 
 const submitResponse = async (req, res) => {
   try {
-    const { requestId, userId } = req.params;
+    // get params
+    const requestId = req.params.requestId ? req.params.requestId : null;
+    const userId = req.params.userId ? req.params.userId : null;
+
     if (!userId) {
       return res.status(400).json({ message: "User ID is required." });
     }
@@ -31,7 +34,9 @@ const submitResponse = async (req, res) => {
     // const { fields, files } = await fileUploader(req);
     // const { responseText, comments } = fields;
     let files = [];
-    const { responseText, comments } = req.body;
+    // get bodys
+    const responseText = req.body.responseText ? req.body.responseText : null;
+    const comments = req.body.comments ? req.body.comments : null;
 
     if (!responseText) {
       return res.status(400).json({ message: "Response text is required." });
@@ -42,7 +47,6 @@ const submitResponse = async (req, res) => {
       responseText,
       comments: comments || "",
       attachments: files.length === 0 ? [] : files,
-      approved: "no",
     });
 
     const savedResponse = await response.save();
@@ -64,7 +68,10 @@ const submitResponse = async (req, res) => {
 // approve the response
 const approveResponse = async (req, res) => {
   try {
-    const { responseId, userId } = req.params;
+    // get params
+    const responseId = req.params.responseId ? req.params.responseId : null;
+    const userId = req.params.userId ? req.params.userId : null;
+
     if (!userId) {
       return res.status(400).json({ message: "User ID is required." });
     }
@@ -87,7 +94,8 @@ const approveResponse = async (req, res) => {
     if (!response) {
       return res.status(404).json({ message: "Response not found." });
     }
-    const { approved, comments } = req.body;
+    const approved = req.body.approved ? req.body.approved : null;
+    const comments = req.body.comments ? req.body.comments : null;
 
     if (!["yes", "no"].includes(approved)) {
       return res.status(400).json({ message: "must contain only yes or no." });
@@ -135,20 +143,20 @@ const getResponsesByRequestId = async (req, res) => {
       return res.status(404).json({ message: "Request not found." });
     }
 
-    const { userId } = req.query;
-    if (!userId || !mongoose.isValidObjectId(userId)) {
-      return res.status(400).json({ message: "Valid userId is required." });
-    }
+    // const { userId } = req.query;
+    // if (!userId || !mongoose.isValidObjectId(userId)) {
+    //   return res.status(400).json({ message: "Valid userId is required." });
+    // }
 
-    if (
-      request.createdBy.toString() !== userId &&
-      request.assignedTo.toString() !== userId
-    ) {
-      return res.status(403).json({
-        message:
-          "Access denied. You are not authorized to view these responses.",
-      });
-    }
+    // if (
+    //   request.createdBy.toString() !== userId &&
+    //   request.assignedTo.toString() !== userId
+    // ) {
+    //   return res.status(403).json({
+    //     message:
+    //       "Access denied. You are not authorized to view these responses.",
+    //   });
+    // }
 
     const responses = await RequestResponse.find({ caseId: requestId })
       .populate("responder", "name email")

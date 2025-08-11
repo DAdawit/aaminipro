@@ -4,12 +4,12 @@ const RequestResponseSchema = new mongoose.Schema(
   {
     caseId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Request", // reference to your main case/request model
+      ref: "Request",
       required: true,
     },
     responder: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // who gave the response
+      ref: "User",
       required: true,
     },
     responseText: {
@@ -39,6 +39,7 @@ const RequestResponseSchema = new mongoose.Schema(
       type: Boolean,
       default: true, // if you want to mark responses as active/obsolete
     },
+    attachments: [{ type: String }],
   },
   {
     timestamps: true,

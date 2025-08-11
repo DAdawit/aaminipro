@@ -10,6 +10,21 @@ const path = require("path");
 const puppeteer = require("puppeteer");
 // const { registerPermission } = require("../controllers/permission.controller");
 const PermissionController = require("../controllers/permission.controller");
+const {
+  sendRequest,
+  updateRequest,
+  getAllRequest,
+  getRequestById,
+  deleteRequests,
+} = require("../controllers/request.controller");
+
+// case request routes
+router.post("/send_request/:userId", sendRequest);
+router.put("/update_request/:userId/:requestId", updateRequest);
+router.get("/get_request", getAllRequest);
+router.get("/get_request/:requestId", getRequestById);
+router.get("/delete_request/:userId", deleteRequests);
+// case response routes
 router.get("/", (req, res) => {
   res.send({
     message: "wellcome",

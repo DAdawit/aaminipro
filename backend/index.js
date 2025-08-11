@@ -24,6 +24,8 @@ app.use(
 app.use(express.static("public"));
 
 // Database connection
+const myUrl = "mongodb://localhost:27017/telebirr";
+
 const uri =
   "mongodb+srv://dadawit:CdawjOQlulra13am@cluster0.gbn1ssb.mongodb.net/?retryWrites=true&w=majority";
 mongoose

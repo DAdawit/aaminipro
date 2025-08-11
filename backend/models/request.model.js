@@ -36,6 +36,7 @@ const RequestSchema = new mongoose.Schema(
         ref: "RequestResponse",
       },
     ],
+    attachments: [{ type: String }],
   },
   {
     timestamps: true,

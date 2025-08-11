@@ -668,7 +668,7 @@ module.exports.removePermissionsRestricted = async (req, res) => {
         message: "The user id  is not valid.",
       });
     }
-    // get users
+    // get user
     const user = await User.findById(userID).populate({
       path: "groupPermissions",
       select: "_id",
@@ -687,14 +687,13 @@ module.exports.removePermissionsRestricted = async (req, res) => {
         status: "fail",
       });
     }
-    let permissions;
     for (const perm of permissionIds) {
       if (!mongoose.isValidObjectId(perm)) {
         return res
           .status(400)
           .json({ message: `Invalid permission ID: ${perm}` });
       }
-      permissions = await Permission.findOne({ _id: perm });
+      const permissions = await Permission.findOne({ _id: perm });
       if (!permissions) {
         return res.status(400).json({ message: "The permissions not found" });
       }

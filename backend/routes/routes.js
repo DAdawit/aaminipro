@@ -17,6 +17,7 @@ const {
   getRequestById,
   deleteRequests,
 } = require("../controllers/request.controller");
+const { submitResponse } = require("../controllers/responseController");
 
 // case request routes
 router.post("/send_request/:userId", sendRequest);
@@ -24,7 +25,9 @@ router.put("/update_request/:userId/:requestId", updateRequest);
 router.get("/get_request", getAllRequest);
 router.get("/get_request/:requestId", getRequestById);
 router.get("/delete_request/:userId", deleteRequests);
-// case response routes
+// reqquest response routes
+router.post("/submit_response/:userId/:requestId", submitResponse);
+
 router.get("/", (req, res) => {
   res.send({
     message: "wellcome",

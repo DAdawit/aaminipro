@@ -27,8 +27,11 @@ const submitResponse = async (req, res) => {
     if (!request) {
       return res.status(404).json({ message: "Request not found." });
     }
-    const { fields, files } = await fileUploader(req);
-    const { responseText, comments } = fields;
+    // use it later
+    // const { fields, files } = await fileUploader(req);
+    // const { responseText, comments } = fields;
+    let files = [];
+    const { responseText, comments } = req.body;
 
     if (!responseText) {
       return res.status(400).json({ message: "Response text is required." });

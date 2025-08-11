@@ -23,12 +23,13 @@ const sendRequest = async (req, res) => {
       });
     }
 
-    const { fields, files } = await fileUploader(req);
-    const tempfiles = Object.values(files || {}).map(
-      (file) => file.originalname
-    );
-    console.log(tempfiles);
-    const { title, description, assignedTo } = fields;
+    // const { fields, files } = await fileUploader(req);
+    // const tempfiles = Object.values(files || {}).map(
+    //   (file) => file.originalname
+    // );
+    const files = [];
+    // console.log(tempfiles);
+    const { title, description, assignedTo } = req.body;
     if (!assignedTo) {
       return res.status(404).json({
         message: "The assigned user id is not found.",
